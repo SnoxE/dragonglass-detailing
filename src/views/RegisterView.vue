@@ -1,18 +1,18 @@
 <template>
   <div class="min-h-screen bg-gray-900">
     <SeparatorComp />
-    <LoginForm />
+    <RegisterForm />
   </div>
 </template>
 
 <script>
-import LoginForm from '@/components/LoginForm.vue'
+import RegisterForm from '@/components/RegisterForm.vue'
 import SeparatorComp from '@/components/SeparatorComp.vue'
 
 export default {
-  name: 'LoginView',
+  name: 'RegisterView',
   components: {
-    LoginForm,
+    RegisterForm,
     SeparatorComp
   }
 }

@@ -1,20 +1,20 @@
 <template>
   <nav class="fixed z-10 w-full bg-transparent">
-    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
+    <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
       <router-link to="/" class="flex items-center p-4">
         <!-- <img src="" class="h-8 mr-3" alt="DGD Logo" /> -->
-        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
+        <span class="self-center whitespace-nowrap text-2xl font-semibold dark:text-white"
           >DG Detailing</span
         >
       </router-link>
       <button
         data-collapse-toggle="navbar-default"
         type="button"
-        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-white rounded-lg md:hidden hover:bg-gray-800 focus:outline-none"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-white hover:bg-gray-800 focus:outline-none md:hidden"
         @click="toggleMenu()"
       >
         <span class="sr-only">Open main menu</span>
-        <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
           <path
             stroke="currentColor"
             stroke-linecap="round"
@@ -24,8 +24,8 @@
           />
         </svg>
       </button>
-      <div id="navbar-default" class="hidden w-full md:block md:w-auto p-4">
-        <ul class="font-medium flex p-0 space-x-8 mt-0 bg-transparent">
+      <div id="navbar-default" class="hidden w-full p-4 md:block md:w-auto">
+        <ul class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
           <li v-for="link in links" :key="link.name">
             <NavBarItem :link="link.link">{{ link.name }}</NavBarItem>
           </li>
@@ -33,9 +33,9 @@
       </div>
       <div
         id="navbar-mobile"
-        class="w-full md:hidden min-h-screen translate-x-full transition-transform duration-300 bg-gray-600 backdrop-blur-sm bg-opacity-30"
+        class="min-h-screen w-full translate-x-full bg-gray-600 bg-opacity-30 backdrop-blur-sm transition-transform duration-300 md:hidden"
       >
-        <ul class="font-medium flex flex-col pl-10 pt-10">
+        <ul class="flex flex-col pl-10 pt-10 font-medium">
           <li v-for="link in links" :key="link">
             <NavBarItem :link="link.link">{{ link.name }}</NavBarItem>
           </li>
@@ -60,7 +60,7 @@ export default {
         { name: 'Oferta', link: '/' },
         { name: 'Rezerwuj', link: '/' },
         { name: 'Zaloguj', link: '/login' },
-        { name: 'Zarejestruj', link: '/' }
+        { name: 'Zarejestruj', link: '/register' }
       ]
     }
   },

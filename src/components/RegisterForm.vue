@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-center text-white">
     <div class="mx-auto mt-10 flex p-6 text-2xl">
-      <span>Witaj z powrotem</span>
+      <span>Nie posiadasz jeszcze konta?</span>
     </div>
 
     <form action="" method="post" class="login-form z-2 mx-auto flex w-80 flex-col p-6">
@@ -23,7 +23,7 @@
         type="submit"
         class="submit-btn mx-auto my-2 w-full rounded-lg bg-slate-600 p-2 hover:bg-mcl-orange"
       >
-        Zaloguj
+        Zarejestruj
       </button>
     </form>
   </div>

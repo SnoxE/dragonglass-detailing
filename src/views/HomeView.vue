@@ -1,5 +1,5 @@
 <template>
-  <HeroSection />
+  <HeroSection class="bg-gray-900" />
 </template>
 
 <script>
