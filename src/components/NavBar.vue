@@ -1,8 +1,7 @@
 <template>
-  <nav class="fixed z-10 w-full bg-transparent">
+  <nav id="navbar" class="fixed z-10 w-full bg-transparent" @scroll="navScroll()">
     <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
       <router-link to="/" class="flex items-center p-4">
-        <!-- <img src="" class="h-8 mr-3" alt="DGD Logo" /> -->
         <span class="self-center whitespace-nowrap text-2xl font-semibold dark:text-white"
           >DG Detailing</span
         >
@@ -26,18 +25,18 @@
       </button>
       <div id="navbar-default" class="hidden w-full p-4 md:block md:w-auto">
         <ul class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
-          <li v-for="link in links" :key="link.name">
-            <NavBarItem :link="link.link">{{ link.name }}</NavBarItem>
+          <li v-for="url in urls" :key="url.name">
+            <NavBarItem :url="url.url">{{ url.name }}</NavBarItem>
           </li>
         </ul>
       </div>
       <div
         id="navbar-mobile"
-        class="min-h-screen w-full translate-x-full bg-gray-600 bg-opacity-30 backdrop-blur-sm transition-transform duration-300 md:hidden"
+        class="bg-light-gray min-h-screen w-full translate-x-full bg-opacity-30 backdrop-blur-sm transition-transform duration-300 md:hidden"
       >
         <ul class="flex flex-col pl-10 pt-10 font-medium">
-          <li v-for="link in links" :key="link">
-            <NavBarItem :link="link.link">{{ link.name }}</NavBarItem>
+          <li v-for="url in urls" :key="url.name">
+            <NavBarItem :url="url.url">{{ url.name }}</NavBarItem>
           </li>
         </ul>
       </div>
@@ -55,12 +54,12 @@ export default {
   },
   data() {
     return {
-      links: [
-        { name: 'O nas', link: '/' },
-        { name: 'Oferta', link: '/' },
-        { name: 'Rezerwuj', link: '/' },
-        { name: 'Zaloguj', link: '/login' },
-        { name: 'Zarejestruj', link: '/register' }
+      urls: [
+        { name: 'O nas', url: '/' },
+        { name: 'Oferta', url: '/oferta' },
+        { name: 'Rezerwuj', url: '/' },
+        { name: 'Zaloguj', url: '/login' },
+        { name: 'Zarejestruj', url: '/rejestracja' }
       ]
     }
   },
@@ -70,6 +69,11 @@ export default {
 
       navbar.classList.toggle('translate-x-1/4')
       navbar.classList.toggle('translate-x-full')
+    },
+    navScroll() {
+      const navbar = document.querySelector('#navbar')
+
+      navbar.classList.toggle('bg-mcl-orange')
     }
   }
 }

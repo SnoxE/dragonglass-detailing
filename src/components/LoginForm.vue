@@ -1,9 +1,8 @@
 <template>
   <div class="flex flex-col justify-center text-white">
-    <div class="mx-auto mt-10 flex p-6 text-2xl">
+    <div class="mx-auto mt-10 flex pt-6 text-2xl">
       <span>Witaj z powrotem</span>
     </div>
-
     <form action="" method="post" class="login-form z-2 mx-auto flex w-80 flex-col p-6">
       <div
         v-for="inputField in inputFields"
@@ -12,7 +11,7 @@
       >
         <input
           :id="inputField.id"
-          class="h-10 rounded bg-slate-500 pl-2"
+          class="bg-light-gray h-10 rounded pl-2"
           :type="inputField.type"
           :name="inputField.name"
           :placeholder="inputField.placeholder"
@@ -21,7 +20,7 @@
       </div>
       <button
         type="submit"
-        class="submit-btn mx-auto my-2 w-full rounded-lg bg-slate-600 p-2 hover:bg-mcl-orange"
+        class="submit-btn mx-auto my-6 w-full rounded-lg bg-gray-500 p-2 hover:bg-mcl-orange"
       >
         Zaloguj
       </button>

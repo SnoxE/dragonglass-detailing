@@ -1,19 +1,19 @@
 <template>
   <div class="bg-dark-mode-gray min-h-screen">
     <SeparatorComp />
-    <LoginForm />
+    <MenuSection />
   </div>
 </template>
 
 <script>
-import LoginForm from '@/components/LoginForm.vue'
 import SeparatorComp from '@/components/SeparatorComp.vue'
+import MenuSection from '@/components/MenuSection.vue'
 
 export default {
-  name: 'LoginView',
+  name: 'MenuView',
   components: {
-    LoginForm,
-    SeparatorComp
+    SeparatorComp,
+    MenuSection
   }
 }
 </script>

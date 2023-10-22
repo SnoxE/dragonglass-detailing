@@ -1,7 +1,7 @@
 <template>
   <router-link
-    :to="link"
-    class="block py-2 px-2 text-white md:bg-transparent md:p-0 hover:underline underline-offset-8"
+    :to="url"
+    class="block px-2 py-2 text-white underline-offset-8 hover:underline md:bg-transparent md:p-0"
   >
     <slot />
   </router-link>
@@ -11,7 +11,7 @@
 export default {
   name: 'NavBarItem',
   props: {
-    link: {
+    url: {
       type: String,
       required: false,
       default: '#'

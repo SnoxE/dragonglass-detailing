@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-900">
+  <div class="bg-dark-mode-gray min-h-screen">
     <SeparatorComp />
     <RegisterForm />
   </div>

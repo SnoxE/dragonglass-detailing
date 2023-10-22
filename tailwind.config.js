@@ -11,7 +11,9 @@ module.exports = {
       colors: {
         'mcl-orange': '#ff6d01',
         'mcl-pale-orange': '#ff984a',
-        'mcl-okx-pink': '#fe1872'
+        'mcl-okx-pink': '#fe1872',
+        'dark-mode-gray': '#121212',
+        'light-gray': '#363636'
       },
       boxShadow: {
         'mcl-orange': '0 0 3px 3px #ff6d01',
