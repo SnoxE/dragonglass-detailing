@@ -1,17 +1,17 @@
 <template>
   <HeroSection />
-  <InfoSection />
+  <AboutSection />
 </template>
 
 <script>
 import HeroSection from '@/components/HeroSection.vue'
-import InfoSection from '@/components/InfoSection.vue'
+import AboutSection from '@/components/AboutSection.vue'
 
 export default {
   name: 'HomeView',
   components: {
     HeroSection,
-    InfoSection
+    AboutSection
   }
 }
 </script>

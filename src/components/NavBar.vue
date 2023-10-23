@@ -24,18 +24,47 @@
         </svg>
       </button>
       <div id="navbar-default" class="hidden w-full p-4 md:block md:w-auto">
-        <ul class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
+        <ul v-if="!loggedIn" class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
           <li v-for="url in urls" :key="url.name">
-            <NavBarItem :url="url.url">{{ url.name }}</NavBarItem>
+            <NavBarItem v-if="url.id === 'login'" @click="toggleLogin()">{{ url.name }}</NavBarItem>
+            <NavBarItem v-else :url="url.url">{{ url.name }}</NavBarItem>
+          </li>
+        </ul>
+        <ul v-else class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
+          <li v-for="url in loggedUrls" :key="url.name">
+            <NavBarItem v-if="url.id === 'login'" @click="toggleLogin()">{{ url.name }}</NavBarItem>
+            <NavBarItem
+              v-if="url.id === 'user'"
+              @mouseover="showUserMenu = true"
+              @mouseleave="showUserMenu = false"
+              >{{ url.name }}</NavBarItem
+            >
+            <NavBarItem v-else :url="url.url">{{ url.name }}</NavBarItem>
+            <div
+              v-if="url.id === 'user'"
+              v-show="showUserMenu"
+              class="absolute flex flex-col bg-light-gray p-4 text-white ease-in-out"
+              @mouseover="showUserMenu = true"
+              @mouseleave="showUserMenu = false"
+            >
+              <router-link to="">Profil</router-link>
+              <router-link to="/user/id/rezerwacje">Rezerwacje</router-link>
+              <router-link to="" @click="toggleLogin()">Wyloguj</router-link>
+            </div>
           </li>
         </ul>
       </div>
       <div
         id="navbar-mobile"
-        class="bg-light-gray min-h-screen w-full translate-x-full bg-opacity-30 backdrop-blur-sm transition-transform duration-300 md:hidden"
+        class="min-h-screen w-full translate-x-full bg-light-gray bg-opacity-30 backdrop-blur-sm transition-transform duration-300 md:hidden"
       >
-        <ul class="flex flex-col pl-10 pt-10 font-medium">
-          <li v-for="url in urls" :key="url.name">
+        <ul v-if="!loggedIn" class="flex flex-col pl-10 pt-10 font-medium">
+          <li v-for="url in urls" :key="url.id">
+            <NavBarItem :url="url.url">{{ url.name }}</NavBarItem>
+          </li>
+        </ul>
+        <ul v-else class="flex flex-col pl-10 pt-10 font-medium">
+          <li v-for="url in loggedUrls" :key="url.id">
             <NavBarItem :url="url.url">{{ url.name }}</NavBarItem>
           </li>
         </ul>
@@ -55,12 +84,29 @@ export default {
   data() {
     return {
       urls: [
-        { name: 'O nas', url: '/' },
-        { name: 'Oferta', url: '/oferta' },
-        { name: 'Rezerwuj', url: '/' },
-        { name: 'Zaloguj', url: '/login' },
-        { name: 'Zarejestruj', url: '/rejestracja' }
-      ]
+        { id: 'about', name: 'O nas', url: '/' },
+        { id: 'oferta', name: 'Oferta', url: '/oferta' },
+        { id: 'reserve', name: 'Rezerwuj', url: '/' },
+        { id: 'login', name: 'Zaloguj', url: '/' },
+        { id: 'register', name: 'Zarejestruj', url: '/rejestracja' }
+      ],
+      loggedUrls: [
+        { id: 'about', name: 'O nas', url: '/' },
+        { id: 'oferta', name: 'Oferta', url: '/oferta' },
+        { id: 'reserve', name: 'Rezerwuj', url: '/' },
+        {
+          id: 'user',
+          name: 'USER',
+          url: '/',
+          children: [
+            { id: 'profile', name: 'Profil', url: '/' },
+            { id: 'orders', name: 'Rezerwacje', url: '/user/id/rezerwacje' }
+            // { id: 'logout', name: 'Wyloguj', url: '/' },
+          ]
+        }
+      ],
+      loggedIn: false,
+      showUserMenu: false
     }
   },
   methods: {
@@ -74,7 +120,21 @@ export default {
       const navbar = document.querySelector('#navbar')
 
       navbar.classList.toggle('bg-mcl-orange')
+    },
+    toggleLogin() {
+      this.loggedIn = !this.loggedIn
+      this.showUserMenu = false
     }
   }
 }
 </script>
+
+<style>
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+</style>

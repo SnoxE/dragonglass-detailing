@@ -9,7 +9,7 @@
       >
         <img src="@/assets/White GT3 RS sticker side profile with traffic lights.jpg" alt="" />
         <router-link :to="item.url" class="mx-auto p-4">
-          <span class="p-4 text-white">{{ item.name }} </span>
+          <span class="p-4 font-medium text-white">{{ item.name }} </span>
         </router-link>
       </li>
     </ul>

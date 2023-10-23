@@ -16,7 +16,7 @@
       </div>
     </div>
   </div>
-  <div class="bg-dark-mode-gray flex py-16">
+  <div class="flex bg-dark-mode-gray py-16">
     <img
       src="@/assets/White GT3 RS sticker side profile with traffic lights.jpg"
       alt=""
@@ -35,6 +35,6 @@
 
 <script>
 export default {
-  name: 'InfoSection'
+  name: 'AboutSection'
 }
 </script>
