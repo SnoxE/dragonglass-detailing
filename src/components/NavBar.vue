@@ -86,14 +86,14 @@ export default {
       urls: [
         { id: 'about', name: 'O nas', url: '/' },
         { id: 'oferta', name: 'Oferta', url: '/oferta' },
-        { id: 'reserve', name: 'Rezerwuj', url: '/' },
+        { id: 'reserve', name: 'Rezerwuj', url: '/rezerwuj' },
         { id: 'login', name: 'Zaloguj', url: '/' },
         { id: 'register', name: 'Zarejestruj', url: '/rejestracja' }
       ],
       loggedUrls: [
         { id: 'about', name: 'O nas', url: '/' },
         { id: 'oferta', name: 'Oferta', url: '/oferta' },
-        { id: 'reserve', name: 'Rezerwuj', url: '/' },
+        { id: 'reserve', name: 'Rezerwuj', url: '/rezerwuj' },
         {
           id: 'user',
           name: 'USER',

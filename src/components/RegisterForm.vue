@@ -12,7 +12,7 @@
       >
         <input
           :id="inputField.id"
-          class="bg-light-gray h-10 rounded pl-2"
+          class="h-10 rounded bg-light-gray pl-2"
           :type="inputField.type"
           :name="inputField.name"
           :placeholder="inputField.placeholder"
@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  name: 'LoginForm',
+  name: 'RegisterForm',
   data() {
     return {
       inputFields: [
