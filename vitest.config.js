@@ -12,3 +12,8 @@ export default mergeConfig(
     }
   })
 )
+// system rezerwacji
+// profil uzytkownika
+// samochody
+// oferta
+// rezerwacje
