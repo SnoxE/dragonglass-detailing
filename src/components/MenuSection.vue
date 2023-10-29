@@ -1,13 +1,13 @@
 <template>
   <div class="mx-auto flex max-w-screen-xl flex-col flex-wrap p-4">
-    <h1 class="p-4 text-5xl font-medium text-white">Oferta</h1>
-    <ul class="grid grid-cols-3 gap-6 py-6 md:grid-cols-3">
+    <h1 class="border-b-2 p-4 pb-1 text-4xl font-medium text-white">OFERTA</h1>
+    <ul class="grid grid-cols-1 gap-7 py-7 sm:grid-cols-3 md:grid-cols-3">
       <li
         v-for="item in items"
         :key="item.name"
-        class="bg-light-gray flex flex-col items-center justify-center rounded-xl"
+        class="flex flex-col items-center justify-center rounded-xl bg-light-gray"
       >
-        <img src="@/assets/White GT3 RS sticker side profile with traffic lights.jpg" alt="" />
+        <img src="@/assets/White_GT3_RS_sticker_side_profile_with_traffic_lights.jpg" alt="" />
         <router-link :to="item.url" class="mx-auto p-4">
           <span class="p-4 font-medium text-white">{{ item.name }} </span>
         </router-link>

@@ -4,16 +4,44 @@
       <span>Zarezerwuj usługę</span>
     </div>
 
-    <FormKit id="reserve-form" type="form" submit-label="Rezerwuj">
-      <FormKit
-        type="text"
-        name="name"
-        label="Your name"
-        placeholder="Jane Doe"
-        help="What do people call you?"
-        validation="required"
-      />
-    </FormKit>
+    <div class="mx-auto mt-4 flex flex-col">
+      <form action="#" method="post" class="flex flex-col gap-5">
+        <!-- Name Input -->
+        <div v-for="inputField in inputFields" :key="inputField.id" class="flex flex-col gap-2">
+          <label :for="inputField.id">{{ inputField.label }}</label>
+          <input
+            :id="inputField.id"
+            :type="inputField.type"
+            :name="inputField.name"
+            :placeholder="inputField.placeholder"
+            required
+            class="h-10 rounded bg-light-gray pl-2"
+          />
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="selector">Wybierz usługę</label>
+          <select id="service" name="selector" class="h-10 rounded bg-light-gray pl-2">
+            <option v-for="service in services" :key="service" :value="service.value">
+              {{ service.name }}
+            </option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="date">Wybierz datę</label>
+          <VueDatePicker
+            id="date"
+            v-model="date"
+            dark
+            :enable-time-picker="false"
+            :min-time="{ hours: 10, minutes: 0 }"
+          />
+        </div>
+        <div class="mx-auto">
+          <button type="submit" class="rounded-md bg-mcl-orange p-2 px-10">Zarezerwuj</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -23,10 +51,40 @@ export default {
   data() {
     return {
       inputFields: [
-        { id: 'email', type: 'text', name: 'email', placeholder: 'you@gmail.com' },
-        { id: 'password', type: 'password', name: 'password', placeholder: 'password' }
+        { id: 'name', type: 'text', name: 'name', label: 'Imię', placeholder: 'Jan' },
+        {
+          id: 'surname',
+          type: 'text',
+          name: 'surname',
+          label: 'Nazwisko',
+          placeholder: 'Kowalski'
+        },
+        {
+          id: 'email',
+          type: 'text',
+          name: 'email',
+          label: 'Email',
+          placeholder: 'nazwa@gmail.com'
+        }
+      ],
+      services: [
+        { value: 'manual-wash', name: 'Mycie ręczne' },
+        { value: 'paint-correction', name: 'Korekta Lakieru' },
+        { value: 'wax', name: 'Woskowanie' },
+        { value: 'ppf', name: 'PPF' }
+      ],
+      carSizes: [
+        { value: 'small', name: 'Małe' },
+        { value: 'medium', name: 'Średnie' },
+        { value: 'large', name: 'Duże' }
       ]
     }
   }
 }
+</script>
+
+<script setup>
+import { ref } from 'vue'
+
+const date = ref(new Date())
 </script>

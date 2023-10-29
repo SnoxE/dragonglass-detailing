@@ -1,5 +1,5 @@
 <template>
-  <nav id="navbar" class="fixed z-10 w-full bg-transparent" @scroll="navScroll()">
+  <nav id="navbar" class="fixed z-10 w-full bg-transparent">
     <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
       <router-link to="/" class="flex items-center p-4">
         <span class="self-center whitespace-nowrap text-2xl font-semibold dark:text-white"
@@ -56,11 +56,13 @@
       </div>
       <div
         id="navbar-mobile"
-        class="min-h-screen w-full translate-x-full bg-light-gray bg-opacity-30 backdrop-blur-sm transition-transform duration-300 md:hidden"
+        class="hidden min-h-screen w-full translate-x-full bg-light-gray bg-opacity-30 backdrop-blur-sm transition-transform duration-300 md:hidden"
       >
         <ul v-if="!loggedIn" class="flex flex-col pl-10 pt-10 font-medium">
           <li v-for="url in urls" :key="url.id">
-            <NavBarItem :url="url.url">{{ url.name }}</NavBarItem>
+            <NavBarItem v-if="url.id === 'login'" :url="url.url" @click="toggleLogin()">{{
+              url.name
+            }}</NavBarItem>
           </li>
         </ul>
         <ul v-else class="flex flex-col pl-10 pt-10 font-medium">
@@ -115,6 +117,7 @@ export default {
 
       navbar.classList.toggle('translate-x-1/4')
       navbar.classList.toggle('translate-x-full')
+      navbar.classList.toggle('hidden')
     },
     navScroll() {
       const navbar = document.querySelector('#navbar')
