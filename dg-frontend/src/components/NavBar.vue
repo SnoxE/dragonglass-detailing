@@ -1,7 +1,7 @@
 <template>
   <nav id="navbar" class="fixed z-10 w-full bg-transparent">
     <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
-      <router-link to="/" class="flex items-center p-4">
+      <router-link to="#" class="flex items-center p-4">
         <span class="self-center whitespace-nowrap text-2xl font-semibold dark:text-white"
           >DG Detailing</span
         >
@@ -26,13 +26,11 @@
       <div id="navbar-default" class="hidden w-full p-4 md:block md:w-auto">
         <ul v-if="!loggedIn" class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
           <li v-for="url in urls" :key="url.name">
-            <NavBarItem v-if="url.id === 'login'" @click="toggleLogin()">{{ url.name }}</NavBarItem>
-            <NavBarItem v-else :url="url.url">{{ url.name }}</NavBarItem>
+            <NavBarItem :url="url.url">{{ url.name }}</NavBarItem>
           </li>
         </ul>
         <ul v-else class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
           <li v-for="url in loggedUrls" :key="url.name">
-            <NavBarItem v-if="url.id === 'login'" @click="toggleLogin()">{{ url.name }}</NavBarItem>
             <NavBarItem
               v-if="url.id === 'user'"
               @mouseover="showUserMenu = true"
@@ -77,6 +75,7 @@
 
 <script>
 import NavBarItem from '@/components/NavBarItem.vue'
+import { useAuthStore } from '@/stores/auth'
 
 export default {
   name: 'NavBar',
@@ -89,7 +88,7 @@ export default {
         { id: 'about', name: 'O nas', url: '/' },
         { id: 'oferta', name: 'Oferta', url: '/oferta' },
         { id: 'reserve', name: 'Rezerwuj', url: '/rezerwuj' },
-        { id: 'login', name: 'Zaloguj', url: '/' },
+        { id: 'login', name: 'Zaloguj', url: '/login' },
         { id: 'register', name: 'Zarejestruj', url: '/rejestracja' }
       ],
       loggedUrls: [

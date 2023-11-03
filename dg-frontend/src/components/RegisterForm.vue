@@ -5,17 +5,23 @@
     </div>
 
     <form action="" method="post" class="login-form z-2 mx-auto flex w-80 flex-col p-6">
-      <div
-        v-for="inputField in inputFields"
-        :key="inputField.id"
-        class="mx-auto my-2 flex w-full flex-col"
-      >
-        <input
-          :id="inputField.id"
+      <div class="mx-auto my-2 flex w-full flex-col gap-4">
+        <InputField
+          id="email"
+          v-model="email"
           class="h-10 rounded bg-light-gray pl-2"
-          :type="inputField.type"
-          :name="inputField.name"
-          :placeholder="inputField.placeholder"
+          type="text"
+          name="email"
+          placeholder="you@gmail.com"
+          required
+        />
+        <InputField
+          id="password"
+          v-model="password"
+          class="h-10 rounded bg-light-gray pl-2"
+          type="password"
+          name="email"
+          placeholder="password"
           required
         />
       </div>
@@ -25,19 +31,28 @@
       >
         Zarejestruj
       </button>
+      <div class="mx-auto flex">
+        <span class="p-1 text-sm">Masz już konto?</span>
+        <router-link
+          to="/login"
+          class="p-1 text-sm underline underline-offset-2 hover:text-mcl-orange"
+          >Zaloguj się</router-link
+        >
+      </div>
     </form>
   </div>
 </template>
 
 <script>
+import InputField from '@/components/InputField.vue'
+
 export default {
   name: 'RegisterForm',
+  components: { InputField },
   data() {
     return {
-      inputFields: [
-        { id: 'email', type: 'text', name: 'email', placeholder: 'you@gmail.com' },
-        { id: 'password', type: 'password', name: 'password', placeholder: 'password' }
-      ]
+      email: '',
+      password: ''
     }
   }
 }

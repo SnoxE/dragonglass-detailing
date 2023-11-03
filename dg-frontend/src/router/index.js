@@ -6,6 +6,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import MenuView from '@/views/MenuView.vue'
 import OrdersView from '@/views/OrdersView.vue'
 import ReserveView from '@/views/ReserveView.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const routes = [
   {
@@ -43,6 +44,16 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes
+})
+
+router.beforeEach(async (to) => {
+  const publicPages = ['/login', '/rejestracja', '/', '/oferta']
+  const authRequired = !publicPages.includes(to.path)
+  const auth = useAuthStore()
+
+  if (authRequired && !auth.user) {
+    return '/login'
+  }
 })
 
 export default router
