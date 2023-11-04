@@ -1,5 +1,7 @@
 package com.example.dgbackend.config;
 
+import com.example.dgbackend.database.user.dto.UserDto;
+import com.example.dgbackend.database.user.sql.UserSqlService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -18,6 +20,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -52,13 +56,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService user() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("snoxe")
-                        .password("{noop}password")
-                        .authorities("read")
-                        .build()
-        );
+    public UserDetailsService user(UserSqlService userSqlService) {
+        return (username) -> {
+            UserDto userDto = userSqlService.getUserByEmail(username);
+            return User.withUsername(userDto.email())
+                            .password(userDto.password())
+                            .authorities("read")
+                            .build();
+        };
     }
 
     @Bean
@@ -67,7 +72,8 @@ public class SecurityConfig {
         .cors(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
-            auth -> auth.requestMatchers("/token").permitAll().anyRequest().authenticated())
+            auth -> auth.requestMatchers("/token", "/api/users/register")
+                    .permitAll().anyRequest().authenticated())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults()))
         .exceptionHandling(
@@ -90,9 +96,14 @@ public class SecurityConfig {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
