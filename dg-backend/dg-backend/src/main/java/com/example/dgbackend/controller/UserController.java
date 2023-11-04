@@ -32,9 +32,4 @@ public class UserController {
 
         return ResponseEntity.ok().build();
     }
-
-    private Map<String, String> generateJwtToken(UserDto user) {
-//        long timestamp =
-        return null;
-    }
 }
