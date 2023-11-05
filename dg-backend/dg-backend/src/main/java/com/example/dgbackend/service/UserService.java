@@ -37,8 +37,8 @@ public class UserService {
         Integer count = userSqlService.getCountByEmail(email);
         if (count > 0) throw new DgAuthException("Adres email jest już w użyciu");
 
-        Integer userId = userSqlService.createUser(firstName, lastName, email, password);
+        userSqlService.createUser(firstName, lastName, email, password);
 
-        return userSqlService.getUserById(userId);
+        return userSqlService.getUserByEmail(email);
     }
 }

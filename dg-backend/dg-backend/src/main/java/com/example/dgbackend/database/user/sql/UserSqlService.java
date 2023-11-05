@@ -74,7 +74,7 @@ public class UserSqlService {
         }
     }
 
-    public UserDto findByEmailAndPassword(String email, String password) throws DgAuthException {
+    public UserDto getUserByEmailAndPassword(String email, String password) throws DgAuthException {
         return jdbcOperations.queryForObject(
                 SELECT_USER_BY_EMAIL_AND_PASSWORD,
                 userRowMapper,
