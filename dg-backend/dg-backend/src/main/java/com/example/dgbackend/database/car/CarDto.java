@@ -1,0 +1,9 @@
+package com.example.dgbackend.database.car;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record CarDto(
+        @JsonProperty("id") String id,
+        @JsonProperty("make") String make,
+        @JsonProperty("model") String model,
+        @JsonProperty("production_year") String productionYear) {}

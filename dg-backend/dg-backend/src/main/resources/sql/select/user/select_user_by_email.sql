@@ -3,10 +3,11 @@ SELECT
     u.first_name,
     u.last_name,
     u.email,
-    u.password
+    u.phone_number,
+    u.password,
+    u.role
 FROM
     users AS u
 WHERE
-    u.email = ?
-    AND u.password = ?;
+    u.email = ?;
 

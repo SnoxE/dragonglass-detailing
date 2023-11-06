@@ -20,24 +20,25 @@ public class UserService {
         this.userSqlService = userSqlService;
     }
 
-    public UserDto validateUser(String email, String password) throws DgAuthException {
-        return null;
-    }
-
     public UserDto registerUser(
             String firstName,
             String lastName,
             String email,
-            String password) throws DgAuthException {
+            String phoneNumber,
+            String password,
+            String role) throws DgAuthException {
 
         Pattern pattern = Pattern.compile("^(.+)@(.+)$");
-        if (email != null) email = email.toLowerCase();
-        if(!pattern.matcher(email).matches()) throw new DgAuthException("Niepoprawny format adresu email");
+        if (email != null) {
+            email = email.toLowerCase();
+            if (!pattern.matcher(email).matches())
+                throw new DgAuthException("Niepoprawny format adresu email");
+        }
 
         Integer count = userSqlService.getCountByEmail(email);
         if (count > 0) throw new DgAuthException("Adres email jest już w użyciu");
 
-        userSqlService.createUser(firstName, lastName, email, password);
+        userSqlService.createUser(firstName, lastName, email, phoneNumber, password, role);
 
         return userSqlService.getUserByEmail(email);
     }

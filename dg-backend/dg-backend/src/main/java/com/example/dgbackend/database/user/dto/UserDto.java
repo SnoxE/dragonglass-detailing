@@ -7,4 +7,6 @@ public record UserDto(
         @JsonProperty("first_name")  String firstName,
         @JsonProperty("last_name") String lastName,
         @JsonProperty("email") String email,
-        @JsonProperty("password") String password) {}
+        @JsonProperty("phone_number") String phoneNumber,
+        @JsonProperty("password") String password,
+        @JsonProperty("role") String role) {}

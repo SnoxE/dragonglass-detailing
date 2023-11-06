@@ -8,8 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,13 +25,11 @@ public class UserSqlService {
     private static final Logger log = LoggerFactory.getLogger(UserSqlService.class);
 
     private static final String INSERT_INTO_USERS = readSqlQuery("sql/insert/insert_into_users.sql");
-//    private static final String INSERT_INTO_USERS = "INSERT INTO USERS(FIRST_NAME, LAST_NAME, EMAIL, PASSWORD) " +
-//        "VALUES (?, ?, ?, ?);";
-    private static final String SELECT_COUNT_BY_EMAIL = readSqlQuery("sql/select/select_user_count_by_email.sql");
-    private static final String SELECT_USER_BY_ID = readSqlQuery("sql/select/select_user_by_id.sql");
-    private static final String SELECT_USER_BY_EMAIL = readSqlQuery("sql/select/select_user_by_email.sql");
+    private static final String SELECT_COUNT_BY_EMAIL = readSqlQuery("sql/select/user/select_user_count_by_email.sql");
+    private static final String SELECT_USER_BY_ID = readSqlQuery("sql/select/user/select_user_by_id.sql");
+    private static final String SELECT_USER_BY_EMAIL = readSqlQuery("sql/select/user/select_user_by_email.sql");
     private static final String SELECT_USER_BY_EMAIL_AND_PASSWORD =
-            readSqlQuery("sql/select/select_user_by_email_and_password.sql");
+            readSqlQuery("sql/select/user/select_user_by_email_and_password.sql");
 
     private final JdbcOperations jdbcOperations;
     private final PasswordEncoder passwordEncoder;
@@ -48,7 +44,9 @@ public class UserSqlService {
             String firstName,
             String lastName,
             String email,
-            String password) throws SQLException {
+            String phoneNumber,
+            String password,
+            String role) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(INSERT_INTO_USERS);
 
         int parameterIndex = 0;
@@ -59,16 +57,32 @@ public class UserSqlService {
         else
             statement.setNull(++parameterIndex, JDBCType.VARCHAR.getVendorTypeNumber());
         statement.setString(++parameterIndex, email);
+        statement.setString(++parameterIndex, phoneNumber);
         statement.setString(++parameterIndex, passwordEncoder.encode(password));
+        if (role != null)
+            statement.setString(++parameterIndex, role.toUpperCase());
+        else
+            statement.setString(++parameterIndex, "USER");
 
         return statement;
     }
 
-    public Integer createUser(String firstName, String lastName, String email, String password) throws DgAuthException {
+    public Integer createUser(
+            String firstName,
+            String lastName,
+            String email,
+            String phoneNumber,
+            String password,
+            String role) throws DgAuthException {
         try {
-//            KeyHolder keyHolder = new GeneratedKeyHolder();
-           return jdbcOperations.update(con -> preparedInsertIntoUsersQuery(con, firstName, lastName, email,
-                   password));
+           return jdbcOperations.update(con -> preparedInsertIntoUsersQuery(
+                   con,
+                   firstName,
+                   lastName,
+                   email,
+                   phoneNumber,
+                   password,
+                   role));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -100,6 +114,8 @@ public class UserSqlService {
                 resultSet.getString(UserSqlRow.FIRST_NAME),
                 resultSet.getString(UserSqlRow.LAST_NAME),
                 resultSet.getString(UserSqlRow.EMAIL),
-                resultSet.getString(UserSqlRow.PASSWORD));
+                resultSet.getString(UserSqlRow.PHONE_NUMBER),
+                resultSet.getString(UserSqlRow.PASSWORD),
+                resultSet.getString(UserSqlRow.ROLE));
     });
 }
