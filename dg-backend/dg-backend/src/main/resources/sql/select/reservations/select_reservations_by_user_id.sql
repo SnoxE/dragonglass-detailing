@@ -5,10 +5,12 @@ SELECT
 	c.make AS cars_make,
 	c.model AS cars_model,
 	c.production_year AS cars_year,
-	c.colour AS cars_year,
-	r.reservation_term AS res_reservation_term
+	c.colour AS cars_colour,
+	r.start_at AS res_start_at
 FROM
 	reservations AS r
 	JOIN services AS s ON r.service_id = s.id
 	JOIN cars AS c ON r.car_id = c.id
---WHERE
+WHERE
+    r.user_id = ?;
+

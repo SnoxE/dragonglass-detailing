@@ -38,7 +38,8 @@ public class CarSqlService {
             String make,
             String model,
             String productionYear,
-            String size) throws SQLException {
+            String size,
+            String colour) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(INSERT_INTO_CARS);
 
         int parameterIndex = 0;
@@ -48,6 +49,7 @@ public class CarSqlService {
         statement.setString(++parameterIndex, model);
         statement.setString(++parameterIndex, productionYear);
         statement.setString(++parameterIndex, size);
+        statement.setString(++parameterIndex, colour);
 
         return statement;
     }
@@ -68,7 +70,8 @@ public class CarSqlService {
             String make,
             String model,
             String productionYear,
-            String size) throws DgAuthException {
+            String size,
+            String colour) throws DgAuthException {
         try {
             return jdbcOperations.update(con -> preparedInsertIntoCarsQuery(
                     con,
@@ -76,7 +79,8 @@ public class CarSqlService {
                     make,
                     model,
                     productionYear,
-                    size));
+                    size,
+                    colour));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -105,15 +109,7 @@ public class CarSqlService {
                 resultSet.getString(CarSqlRow.MAKE),
                 resultSet.getString(CarSqlRow.MODEL),
                 resultSet.getString(CarSqlRow.PRODUCTION_YEAR),
-                resultSet.getString(CarSqlRow.SIZE));
+                resultSet.getString(CarSqlRow.SIZE),
+                resultSet.getString(CarSqlRow.COLOUR));
     }
-
-//    private final RowMapper<CarDto> carRowMapper = ((resultSet, rowNum) -> {
-//        return new CarDto(
-//                resultSet.getString(CarSqlRow.ID),
-//                resultSet.getString(CarSqlRow.MAKE),
-//                resultSet.getString(CarSqlRow.MODEL),
-//                resultSet.getString(CarSqlRow.PRODUCTION_YEAR),
-//                resultSet.getString(CarSqlRow.SIZE));
-//    });
 }

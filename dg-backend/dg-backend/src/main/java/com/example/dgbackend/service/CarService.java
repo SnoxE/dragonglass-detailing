@@ -27,9 +27,10 @@ public class CarService {
                    String make,
                    String model,
                    String productionYear,
-                   String size) throws DgAuthException {
+                   String size,
+                   String colour) throws DgAuthException {
 
-        carSqlService.createCar(userId, make, model, productionYear, size);
+        carSqlService.createCar(userId, make, model, productionYear, size, colour);
     }
 
     public ContentDto<CarDto> getUserCars(String userId) {
@@ -39,11 +40,12 @@ public class CarService {
     }
 
     private static CarDto carDtoMapper(CarSqlRow carSqlRow) {
-        return new CarDto(
-                String.valueOf(carSqlRow.id()),
-                carSqlRow.make(),
-                carSqlRow.model(),
-                carSqlRow.productionYear(),
-                carSqlRow.size());
+    return new CarDto(
+        String.valueOf(carSqlRow.id()),
+        carSqlRow.make(),
+        carSqlRow.model(),
+        carSqlRow.productionYear(),
+        carSqlRow.size(),
+        carSqlRow.colour());
     }
 }

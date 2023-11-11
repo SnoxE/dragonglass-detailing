@@ -100,6 +100,7 @@ public class UserSqlService {
     public Integer getCountByEmail(String email) {
         return jdbcOperations.queryForObject(SELECT_COUNT_BY_EMAIL, Integer.class, email);
     }
+
     public UserDto getUserById(int id) {
         return jdbcOperations.queryForObject(SELECT_USER_BY_ID, userRowMapper, id);
     }
