@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/reservations")
-    public ContentDto<ReservationDto> getUserRedervations(@PathVariable("userId") String userId) {
+    public ContentDto<ReservationDto> getUserReservations(@PathVariable("userId") String userId) {
         return reservationService.getUserReservations(userId);
     }
 }
