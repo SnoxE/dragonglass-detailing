@@ -6,4 +6,5 @@ public record CarDto(
         @JsonProperty("id") String id,
         @JsonProperty("make") String make,
         @JsonProperty("model") String model,
-        @JsonProperty("production_year") String productionYear) {}
+        @JsonProperty("production_year") String productionYear,
+        @JsonProperty("size") String size) {}

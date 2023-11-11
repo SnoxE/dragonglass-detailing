@@ -5,7 +5,6 @@ import com.example.dgbackend.common.exceptions.DgAuthException;
 import com.example.dgbackend.database.car.CarDto;
 import com.example.dgbackend.database.car.sql.CarSqlRow;
 import com.example.dgbackend.database.car.sql.CarSqlService;
-import com.example.dgbackend.database.user.sql.UserSqlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,9 +26,10 @@ public class CarService {
                    int userId,
                    String make,
                    String model,
-                   String productionYear) throws DgAuthException {
+                   String productionYear,
+                   String size) throws DgAuthException {
 
-        carSqlService.createCar(userId, make, model, productionYear);
+        carSqlService.createCar(userId, make, model, productionYear, size);
     }
 
     public ContentDto<CarDto> getUserCars(String userId) {
@@ -43,6 +43,7 @@ public class CarService {
                 String.valueOf(carSqlRow.id()),
                 carSqlRow.make(),
                 carSqlRow.model(),
-                carSqlRow.productionYear());
+                carSqlRow.productionYear(),
+                carSqlRow.size());
     }
 }

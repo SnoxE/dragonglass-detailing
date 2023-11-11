@@ -1,13 +1,11 @@
 package com.example.dgbackend.database.car.sql;
 
 import com.example.dgbackend.common.exceptions.DgAuthException;
-import com.example.dgbackend.database.car.CarDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcOperations;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,7 +37,8 @@ public class CarSqlService {
             int userId,
             String make,
             String model,
-            String productionYear) throws SQLException {
+            String productionYear,
+            String size) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(INSERT_INTO_CARS);
 
         int parameterIndex = 0;
@@ -48,6 +47,7 @@ public class CarSqlService {
         statement.setString(++parameterIndex, make);
         statement.setString(++parameterIndex, model);
         statement.setString(++parameterIndex, productionYear);
+        statement.setString(++parameterIndex, size);
 
         return statement;
     }
@@ -67,14 +67,16 @@ public class CarSqlService {
             int userId,
             String make,
             String model,
-            String productionYear) throws DgAuthException {
+            String productionYear,
+            String size) throws DgAuthException {
         try {
             return jdbcOperations.update(con -> preparedInsertIntoCarsQuery(
                     con,
                     userId,
                     make,
                     model,
-                    productionYear));
+                    productionYear,
+                    size));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -102,14 +104,16 @@ public class CarSqlService {
                 resultSet.getInt(CarSqlRow.ID),
                 resultSet.getString(CarSqlRow.MAKE),
                 resultSet.getString(CarSqlRow.MODEL),
-                resultSet.getString(CarSqlRow.PRODUCTION_YEAR));
+                resultSet.getString(CarSqlRow.PRODUCTION_YEAR),
+                resultSet.getString(CarSqlRow.SIZE));
     }
 
-    private final RowMapper<CarDto> carRowMapper = ((resultSet, rowNum) -> {
-        return new CarDto(
-                resultSet.getString(CarSqlRow.ID),
-                resultSet.getString(CarSqlRow.MAKE),
-                resultSet.getString(CarSqlRow.MODEL),
-                resultSet.getString(CarSqlRow.PRODUCTION_YEAR));
-    });
+//    private final RowMapper<CarDto> carRowMapper = ((resultSet, rowNum) -> {
+//        return new CarDto(
+//                resultSet.getString(CarSqlRow.ID),
+//                resultSet.getString(CarSqlRow.MAKE),
+//                resultSet.getString(CarSqlRow.MODEL),
+//                resultSet.getString(CarSqlRow.PRODUCTION_YEAR),
+//                resultSet.getString(CarSqlRow.SIZE));
+//    });
 }

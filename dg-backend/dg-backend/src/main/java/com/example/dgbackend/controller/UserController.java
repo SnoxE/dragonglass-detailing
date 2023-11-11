@@ -37,7 +37,7 @@ public class UserController {
     public ResponseEntity<ResponseDto> addCar(
             @PathVariable("userId") String userId,
             @RequestBody CarDto carDto) {
-    carService.addCar(Integer.parseInt(userId), carDto.make(), carDto.model(), carDto.productionYear());
+    carService.addCar(Integer.parseInt(userId), carDto.make(), carDto.model(), carDto.productionYear(), carDto.size());
 
         return ResponseEntity.ok().build();
     }
