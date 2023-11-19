@@ -1,5 +1,6 @@
 package com.example.dgbackend.controller;
 
+import com.example.dgbackend.model.LoginMessage;
 import com.example.dgbackend.model.LoginRequest;
 import com.example.dgbackend.service.TokenService;
 import org.slf4j.Logger;
@@ -23,11 +24,11 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping("/token")
-    public String token(@RequestBody LoginRequest userLogin) {
+    @PostMapping("/api/token")
+    public LoginMessage token(@RequestBody LoginRequest userLogin) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userLogin.email(), userLogin.password()));
 
-        return tokenService.generateToken(authentication);
+    return new LoginMessage(tokenService.generateToken(authentication));
     }
 }

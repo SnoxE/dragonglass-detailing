@@ -4,8 +4,39 @@
       <span>Nie masz jeszcze konta?</span>
     </div>
 
-    <form action="" method="post" class="login-form z-2 mx-auto flex w-80 flex-col p-6">
+    <form
+      method="post"
+      class="login-form z-2 mx-auto flex w-80 flex-col p-6"
+      @submit.prevent="registerUser"
+    >
       <div class="mx-auto my-2 flex w-full flex-col gap-4">
+        <InputField
+          id="first_name"
+          v-model="first_name"
+          class="h-10 rounded bg-light-gray pl-2"
+          type="text"
+          name="first_name"
+          placeholder="Jan"
+          required
+        />
+        <InputField
+          id="last_name"
+          v-model="last_name"
+          class="h-10 rounded bg-light-gray pl-2"
+          type="text"
+          name="last_name"
+          placeholder="Kowalski"
+          required
+        />
+        <InputField
+          id="phone_number"
+          v-model="phone_number"
+          class="h-10 rounded bg-light-gray pl-2"
+          type="text"
+          name="phone_number"
+          placeholder="123456789"
+          required
+        />
         <InputField
           id="email"
           v-model="email"
@@ -21,7 +52,7 @@
           class="h-10 rounded bg-light-gray pl-2"
           type="password"
           name="email"
-          placeholder="password"
+          placeholder="hasło"
           required
         />
       </div>
@@ -45,14 +76,29 @@
 
 <script>
 import InputField from '@/components/InputField.vue'
+// import axios from 'axios'
 
 export default {
   name: 'RegisterForm',
   components: { InputField },
   data() {
     return {
+      first_name: '',
+      last_name: '',
+      phone_number: '',
       email: '',
       password: ''
+    }
+  },
+  methods: {
+    async registerUser() {
+      // const response = await axios.post('users/register', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      //   // body: JSON.stringify({ this.first_name, this.last_name })
+      // })
     }
   }
 }

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import router from '@/router/index.js'
+import axios from 'axios'
 
 export const useAuthStore = defineStore({
   id: 'auth',
@@ -11,18 +12,23 @@ export const useAuthStore = defineStore({
     }
   },
   actions: {
-    async login(username, password) {
-      const response = await fetch('http://localhost:8080/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
+    async login(email, password) {
+      // const response = await fetch('http://localhost:8080/api/token', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({ email, password })
+      // })
+
+      const response = await axios.post('api/token', {
+        email: email,
+        password: password
       })
 
       if (response.status == 200) {
-        const token = await response.text()
-        this.user = username
+        const token = await response.data['token']
+        this.user = email
         this.token = token
         router.push(this.returnUrl || '/')
       }

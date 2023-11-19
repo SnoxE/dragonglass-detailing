@@ -23,7 +23,7 @@ public class HomeController {
     public String home(Principal principal){ return "Hi, " + principal.getName(); }
 
     @PreAuthorize("hasAuthority('SCOPE_read')")
-    @GetMapping("/secure")
+    @GetMapping("/api/secure")
     public String secure(Principal principal) {
         UserDto user = userSqlService.getUserByEmail(principal.getName());
         return "Hi, secure " + user;
