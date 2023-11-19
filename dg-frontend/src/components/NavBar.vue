@@ -1,7 +1,7 @@
 <template>
   <nav id="navbar" class="fixed z-10 w-full bg-transparent">
     <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
-      <router-link to="#" class="flex items-center p-4">
+      <router-link to="/" class="flex items-center p-4">
         <span class="self-center whitespace-nowrap text-2xl font-semibold dark:text-white"
           >DG Detailing</span
         >
