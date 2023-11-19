@@ -28,7 +28,7 @@
           Nasza oferta
         </router-link>
         <router-link
-          to="/"
+          to="/rezerwuj"
           class="prices-btn mx-4 my-2 flex w-36 justify-center rounded-lg border border-solid border-mcl-orange bg-transparent px-6 py-2 font-medium text-white hover:bg-mcl-orange"
         >
           Rezerwuj

@@ -52,9 +52,10 @@
           class="h-10 rounded bg-light-gray pl-2"
           type="password"
           name="email"
-          placeholder="hasło"
+          placeholder="Hasło"
           required
         />
+        <span v-if="isValid" class="pl-2 text-sm text-red-600">{{ error }}</span>
       </div>
       <button
         type="submit"
@@ -76,7 +77,8 @@
 
 <script>
 import InputField from '@/components/InputField.vue'
-// import axios from 'axios'
+import router from '@/router/index.js'
+import axios from 'axios'
 
 export default {
   name: 'RegisterForm',
@@ -87,18 +89,63 @@ export default {
       last_name: '',
       phone_number: '',
       email: '',
-      password: ''
+      password: '',
+      error: '',
+      isValid: true
     }
   },
   methods: {
+    emailNotUnique() {
+      const response = axios.get('/api/users/email?email=' + this.email)
+
+      if (response.status == 200) {
+        if (response.data > 0) {
+          return true
+        } else {
+          return false
+        }
+      }
+    },
+    validateForm() {
+      if (this.phone_number.length !== 9 || !this.phone_number.match('^[0-9]+$')) {
+        this.error = 'Niepoprawny numer telefonu'
+        return false
+      }
+
+      if (!this.email.match('^(.+)@(.+)$')) {
+        this.error = 'Niepoprawny format adresu email'
+        return false
+      }
+
+      // if (this.emailNotUnique()) {
+      //   this.error = 'Adres email jest już zajęty'
+      //   console.log('xd')
+      //   return false
+      // }
+
+      if (this.password.length < 3) {
+        this.error = 'Hasło jest za krótkie'
+        return false
+      }
+
+      return true
+    },
     async registerUser() {
-      // const response = await axios.post('users/register', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   }
-      //   // body: JSON.stringify({ this.first_name, this.last_name })
-      // })
+      if (!this.validateForm()) {
+        return false
+      } else {
+        const response = await axios.post('api/users/register', {
+          first_name: this.first_name,
+          last_name: this.last_name,
+          phone_number: this.phone_number,
+          email: this.email,
+          password: this.password
+        })
+
+        if (response.status == 200) {
+          router.push(this.returnUrl || '/login')
+        }
+      }
     }
   }
 }

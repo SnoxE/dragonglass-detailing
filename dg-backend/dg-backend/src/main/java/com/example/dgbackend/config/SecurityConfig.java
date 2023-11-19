@@ -72,7 +72,11 @@ public class SecurityConfig {
         .cors(Customizer.withDefaults())
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
-            auth -> auth.requestMatchers("/api/token", "/api/users/register", "/api/services/**")
+            auth -> auth.requestMatchers(
+                    "/api/token",
+                            "/api/users/register",
+                            "/api/users/email",
+                            "/api/services/**")
                     .permitAll().anyRequest().authenticated())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults()))

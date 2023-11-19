@@ -24,12 +24,12 @@
         </svg>
       </button>
       <div id="navbar-default" class="hidden w-full p-4 md:block md:w-auto">
-        <ul v-if="!loggedIn" class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
+        <ul v-show="!loggedIn" class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
           <li v-for="url in urls" :key="url.name">
             <NavBarItem :url="url.url">{{ url.name }}</NavBarItem>
           </li>
         </ul>
-        <ul v-else class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
+        <ul v-show="loggedIn" class="mt-0 flex space-x-8 bg-transparent p-0 font-medium">
           <li v-for="url in loggedUrls" :key="url.name">
             <NavBarItem
               v-if="url.id === 'user'"
@@ -47,7 +47,7 @@
             >
               <router-link to="">Profil</router-link>
               <router-link to="/user/id/rezerwacje">Rezerwacje</router-link>
-              <router-link to="" @click="toggleLogin()">Wyloguj</router-link>
+              <router-link to="" @click="logout()">Wyloguj</router-link>
             </div>
           </li>
         </ul>
@@ -58,7 +58,7 @@
       >
         <ul v-if="!loggedIn" class="flex flex-col pl-10 pt-10 font-medium">
           <li v-for="url in urls" :key="url.id">
-            <NavBarItem v-if="url.id === 'login'" :url="url.url" @click="toggleLogin()">{{
+            <NavBarItem v-if="url.id === 'login'" :url="url.url" @click="logout()">{{
               url.name
             }}</NavBarItem>
           </li>
@@ -76,11 +76,15 @@
 <script>
 import NavBarItem from '@/components/NavBarItem.vue'
 import { useAuthStore } from '@/stores/auth'
+import { isLoggedIn } from '@/authStatus'
 
 export default {
   name: 'NavBar',
   components: {
     NavBarItem
+  },
+  setup() {
+    return { loggedIn: isLoggedIn }
   },
   data() {
     return {
@@ -106,14 +110,12 @@ export default {
           ]
         }
       ],
-      loggedIn: false,
       showUserMenu: false
     }
   },
   methods: {
     toggleMenu() {
       const navbar = document.querySelector('#navbar-mobile')
-
       navbar.classList.toggle('translate-x-1/4')
       navbar.classList.toggle('translate-x-full')
       navbar.classList.toggle('hidden')
@@ -123,9 +125,9 @@ export default {
 
       navbar.classList.toggle('bg-mcl-orange')
     },
-    toggleLogin() {
-      this.loggedIn = !this.loggedIn
-      this.showUserMenu = false
+    logout() {
+      useAuthStore().logout()
+      isLoggedIn.value = false
     }
   }
 }

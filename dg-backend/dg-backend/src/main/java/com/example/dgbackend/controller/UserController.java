@@ -10,12 +10,10 @@ import com.example.dgbackend.service.ReservationService;
 import com.example.dgbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 
 @RestController
@@ -65,5 +63,15 @@ public class UserController {
     @GetMapping("/{userId}/reservations")
     public ContentDto<ReservationDto> getUserReservations(@PathVariable("userId") String userId) {
         return reservationService.getUserReservations(userId);
+    }
+
+    @GetMapping("/user")
+    public UserDto getLoggedUser(Principal principal) {
+        return userService.getUserByEmail(principal.getName());
+    }
+
+    @GetMapping("/email")
+    public int getUserCountByEmail(@RequestParam("email") String email) {
+        return userService.getUserCountByEmail(email);
     }
 }

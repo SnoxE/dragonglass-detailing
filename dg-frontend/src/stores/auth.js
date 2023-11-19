@@ -6,21 +6,13 @@ export const useAuthStore = defineStore({
   id: 'auth',
   state: () => {
     return {
-      user: null,
-      token: '',
+      user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
+      token: localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : '',
       returnUrl: '/'
     }
   },
   actions: {
     async login(email, password) {
-      // const response = await fetch('http://localhost:8080/api/token', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({ email, password })
-      // })
-
       const response = await axios.post('api/token', {
         email: email,
         password: password
@@ -28,6 +20,8 @@ export const useAuthStore = defineStore({
 
       if (response.status == 200) {
         const token = await response.data['token']
+        localStorage.setItem('user', JSON.stringify(email))
+        localStorage.setItem('token', JSON.stringify(token))
         this.user = email
         this.token = token
         router.push(this.returnUrl || '/')
@@ -36,7 +30,8 @@ export const useAuthStore = defineStore({
     logout() {
       this.user = null
       this.token = ''
-      router.push('/login')
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
     }
   }
 })

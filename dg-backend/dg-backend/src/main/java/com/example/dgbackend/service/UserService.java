@@ -42,4 +42,14 @@ public class UserService {
 
         return userSqlService.getUserByEmail(email);
     }
+
+    public UserDto getUserByEmail(String email)
+    {
+        return userSqlService.getUserByEmail(email);
+    }
+
+    public int getUserCountByEmail(String email)
+    {
+        return userSqlService.getCountByEmail(email);
+    }
 }
