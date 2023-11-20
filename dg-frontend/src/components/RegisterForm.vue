@@ -95,8 +95,8 @@ export default {
     }
   },
   methods: {
-    emailNotUnique() {
-      const response = axios.get('/api/users/email?email=' + this.email)
+    async emailNotUnique() {
+      const response = await axios.get('/api/users/email?email=' + this.email)
 
       if (response.status == 200) {
         if (response.data > 0) {
@@ -106,9 +106,19 @@ export default {
         }
       }
     },
-    validateForm() {
-      if (this.phone_number.length !== 9 || !this.phone_number.match('^[0-9]+$')) {
+    async validateForm() {
+      if (!this.phone_number.match('^[0-9]+$')) {
         this.error = 'Niepoprawny numer telefonu'
+        return false
+      }
+
+      if (this.phone_number.length < 9) {
+        this.error = 'Za krótki numer telefonu'
+        return false
+      }
+
+      if (this.phone_number.length > 9) {
+        this.error = 'Za długi numer telefonu'
         return false
       }
 
@@ -117,11 +127,10 @@ export default {
         return false
       }
 
-      // if (this.emailNotUnique()) {
-      //   this.error = 'Adres email jest już zajęty'
-      //   console.log('xd')
-      //   return false
-      // }
+      if (await this.emailNotUnique()) {
+        this.error = 'Adres email jest już zajęty'
+        return false
+      }
 
       if (this.password.length < 3) {
         this.error = 'Hasło jest za krótkie'
@@ -131,7 +140,7 @@ export default {
       return true
     },
     async registerUser() {
-      if (!this.validateForm()) {
+      if (!(await this.validateForm())) {
         return false
       } else {
         const response = await axios.post('api/users/register', {
