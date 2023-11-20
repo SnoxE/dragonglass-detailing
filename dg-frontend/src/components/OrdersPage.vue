@@ -27,21 +27,24 @@
       </div>
       <div
         v-for="order in orderList"
-        :key="order.id"
+        :key="order.res_id"
         class="flex max-w-screen-md rounded-lg border-2 border-transparent text-white hover:border-white"
       >
-        <div class="w-1/4 rounded-l-lg bg-light-gray p-6">
+        <div class="bg w-1/4 rounded-l-lg bg-light-gray py-6 pl-6">
           <div class="flex flex-col">
-            <span class="mb-2 font-medium">{{ order.status }}</span>
-            <span> {{ order.date }}</span>
-            <span class="text-xkom-gray"> nr {{ order.id }}</span>
-            <span class="mt-2">{{ order.price }} zł</span>
+            <span> {{ extractDateAndTime(order.res_start_at)['date'] }}</span>
+            <span> {{ extractDateAndTime(order.res_start_at)['time'] }}</span>
+            <span class="text-xkom-gray"> nr {{ order.res_id }}</span>
+            <span class="mt-2">{{ order.services_price }} zł</span>
           </div>
         </div>
-        <div class="flex w-3/4 justify-between">
-          <div class="my-auto flex flex-col p-10">
-            <span class="justify-end text-xl font-medium"> {{ order.service }}</span>
-            <span class="text-lg"> {{ order.car }}</span>
+        <div class="bg-dark-gray flex w-3/4 justify-between rounded-r-lg">
+          <div class="my-auto flex flex-col px-10">
+            <span class="justify-end text-xl font-medium"> {{ order.services_name }}</span>
+            <span class="text-lg">
+              {{ order.cars_year }} {{ order.cars_make }} {{ order.cars_model }}</span
+            >
+            <span> {{ order.cars_colour }}</span>
           </div>
           <div class="">
             <button
@@ -52,39 +55,69 @@
           </div>
         </div>
       </div>
+      <div class="">
+        <button
+          class="m-4 rounded-lg border border-transparent px-4 py-2 font-medium text-white hover:border hover:border-mcl-orange"
+          @click="fetchUserCars"
+        >
+          Fetch cars
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'OrdersPage',
   data() {
     return {
-      orderList: [
-        {
-          id: '0001',
-          status: 'Rezerwacja',
-          service: 'Mycie Ręczne',
-          date: '30.10.2023',
-          price: 150,
-          car: 'Renault Clio 4'
-        },
-        {
-          id: '0002',
-          status: 'Rezerwacja',
-          service: 'PPF',
-          date: '30.10.2023',
-          price: 4000,
-          car: 'Renault Clio 4'
-        }
-      ],
       items: [
         { id: 1, label: 'Option 1', value: 'option1' },
         { id: 2, label: 'Option 2', value: 'option2' },
         { id: 3, label: 'Option 3', value: 'option3' }
       ],
-      selectedItems: []
+      orderList: [],
+      selectedItems: [],
+      userId: ''
+    }
+  },
+  async mounted() {
+    await this.fetchUserId()
+    await this.fetchOrders()
+  },
+  methods: {
+    async fetchOrders() {
+      const response = await axios.get('api/users/' + this.userId + '/reservations')
+      const reservationList = response.data['content']
+
+      reservationList.forEach((reservation) => {
+        this.orderList.push(reservation)
+      })
+    },
+    async fetchUserId() {
+      const response = await axios.get('api/users/user')
+      this.userId = response.data['id']
+    },
+    async fetchUserCars() {
+      const response = await axios.get('api/users/' + this.userId + '/cars')
+      console.log(response.data['content'])
+    },
+    extractDateAndTime(timestamp) {
+      const dateObj = new Date(timestamp)
+
+      const year = dateObj.getFullYear()
+      const month = ('0' + (dateObj.getMonth() + 1)).slice(-2) // Months are 0-indexed
+      const day = ('0' + dateObj.getDate()).slice(-2)
+      const date = `${year}-${month}-${day}`
+
+      const hours = ('0' + dateObj.getHours()).slice(-2)
+      const minutes = ('0' + dateObj.getMinutes()).slice(-2)
+      const time = `${hours}:${minutes}`
+
+      return { date, time }
     }
   }
 }

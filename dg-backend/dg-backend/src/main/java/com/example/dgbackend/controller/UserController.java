@@ -40,6 +40,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/user")
+    public UserDto getLoggedUser(Principal principal) {
+        return userService.getUserByEmail(principal.getName());
+    }
+
+    @GetMapping("/email")
+    public int getUserCountByEmail(@RequestParam("email") String email) {
+        return userService.getUserCountByEmail(email);
+    }
+
     @PostMapping("/{userId}/addCar")
     public ResponseEntity<ResponseDto> addCar(
             @PathVariable("userId") String userId,
@@ -63,15 +73,5 @@ public class UserController {
     @GetMapping("/{userId}/reservations")
     public ContentDto<ReservationDto> getUserReservations(@PathVariable("userId") String userId) {
         return reservationService.getUserReservations(userId);
-    }
-
-    @GetMapping("/user")
-    public UserDto getLoggedUser(Principal principal) {
-        return userService.getUserByEmail(principal.getName());
-    }
-
-    @GetMapping("/email")
-    public int getUserCountByEmail(@RequestParam("email") String email) {
-        return userService.getUserCountByEmail(email);
     }
 }
