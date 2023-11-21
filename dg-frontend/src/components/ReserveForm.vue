@@ -38,7 +38,9 @@
           />
         </div>
         <div class="mx-auto">
-          <button type="submit" class="rounded-md bg-mcl-orange p-2 px-10">Zarezerwuj</button>
+          <button type="submit" class="rounded-md bg-mcl-orange p-2 px-10" @click.prevent="xd">
+            Zarezerwuj
+          </button>
         </div>
       </form>
     </div>
@@ -67,23 +69,30 @@ export default {
           placeholder: 'nazwa@gmail.com'
         }
       ],
-      services: [
-        { value: 'manual-wash', name: 'Mycie ręczne' },
-        { value: 'paint-correction', name: 'Korekta Lakieru' },
-        { value: 'wax', name: 'Woskowanie' },
-        { value: 'ppf', name: 'PPF' }
-      ],
+      services: [],
       carSizes: [
         { value: 'small', name: 'Małe' },
         { value: 'medium', name: 'Średnie' },
         { value: 'large', name: 'Duże' }
       ]
     }
+  },
+  async mounted() {
+    await this.getServices()
+  },
+  methods: {
+    async getServices() {
+      const response = await axios.get('api/services')
+      this.services = response.data['content']
+      console.log(this.services)
+    },
+    xd() {}
   }
 }
 </script>
 
 <script setup>
+import axios from 'axios'
 import { ref } from 'vue'
 
 const date = ref(new Date())

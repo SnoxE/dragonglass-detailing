@@ -2,7 +2,9 @@ package com.example.dgbackend.service;
 
 import com.example.dgbackend.common.dto.ContentDto;
 import com.example.dgbackend.database.services.ServiceDto;
+import com.example.dgbackend.database.services.ServiceNamesDto;
 import com.example.dgbackend.database.services.sql.ServicesSqlRow;
+import static com.example.dgbackend.database.services.sql.ServicesSqlRow.ServiceNamesSqlRow;
 import com.example.dgbackend.database.services.sql.ServicesSqlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,13 @@ public class ServicesService {
     return new ContentDto<>(serviceDtoList);
     }
 
+    public ContentDto<ServiceNamesDto> getServiceNames() {
+        List<ServiceNamesDto> serviceNamesDtoList = servicesSqlService.getServiceNames()
+                .stream().map(ServicesService::serviceNamesDtoMapper).toList();
+
+        return new ContentDto<>(serviceNamesDtoList);
+    }
+
     public Optional<Integer> getServiceIdByNameAndCarSize(String serviceName, String carSize) {
         return servicesSqlService.getServiceIdByNameAndCarSize(serviceName, carSize);
     }
@@ -38,5 +47,10 @@ public class ServicesService {
                 servicesSqlRow.price(),
                 servicesSqlRow.length(),
                 servicesSqlRow.car_size());
+    }
+
+    private static ServiceNamesDto serviceNamesDtoMapper(ServiceNamesSqlRow servicesSqlRow) {
+        return new ServiceNamesDto(
+                servicesSqlRow.name());
     }
 }

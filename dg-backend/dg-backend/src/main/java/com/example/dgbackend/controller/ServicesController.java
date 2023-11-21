@@ -2,6 +2,7 @@ package com.example.dgbackend.controller;
 
 import com.example.dgbackend.common.dto.ContentDto;
 import com.example.dgbackend.database.services.ServiceDto;
+import com.example.dgbackend.database.services.ServiceNamesDto;
 import com.example.dgbackend.service.ServicesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,11 @@ public class ServicesController {
 
     @Autowired
     ServicesService servicesService;
+
+    @GetMapping()
+    public ContentDto<ServiceNamesDto> getServiceNames() {
+        return servicesService.getServiceNames();
+    }
 
     @GetMapping("/{serviceName}")
     public ContentDto<ServiceDto> getServiceByName(@PathVariable("serviceName") String serviceName) {
