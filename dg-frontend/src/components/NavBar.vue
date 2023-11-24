@@ -45,8 +45,9 @@
               @mouseover="showUserMenu = true"
               @mouseleave="showUserMenu = false"
             >
-              <router-link to="">Profil</router-link>
-              <router-link to="/user/id/rezerwacje">Rezerwacje</router-link>
+              <router-link to="/user/profil">Profil</router-link>
+              <router-link to="/user/samochody">Samochody</router-link>
+              <router-link to="/user/rezerwacje">Rezerwacje</router-link>
               <router-link to="" @click="logout()">Wyloguj</router-link>
             </div>
           </li>
@@ -105,7 +106,8 @@ export default {
           url: '/',
           children: [
             { id: 'profile', name: 'Profil', url: '/' },
-            { id: 'orders', name: 'Rezerwacje', url: '/user/id/rezerwacje' }
+            { id: 'orders', name: 'Rezerwacje', url: '/user/rezerwacje' },
+            { id: 'cars', name: 'Samochody', url: '/user/cars' }
             // { id: 'logout', name: 'Wyloguj', url: '/' },
           ]
         }

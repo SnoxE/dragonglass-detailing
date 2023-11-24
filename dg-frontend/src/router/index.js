@@ -6,6 +6,8 @@ import RegisterView from '@/views/RegisterView.vue'
 import MenuView from '@/views/MenuView.vue'
 import OrdersView from '@/views/OrdersView.vue'
 import ReserveView from '@/views/ReserveView.vue'
+import CarsView from '@/views/CarsView.vue'
+import ProfileView from '@/views/ProfileView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const routes = [
@@ -30,7 +32,7 @@ const routes = [
     component: MenuView
   },
   {
-    path: '/user/id/rezerwacje',
+    path: '/user/rezerwacje',
     name: 'orders',
     component: OrdersView
   },
@@ -38,6 +40,16 @@ const routes = [
     path: '/rezerwuj',
     name: 'reserve',
     component: ReserveView
+  },
+  {
+    path: '/user/samochody',
+    name: 'cars',
+    component: CarsView
+  },
+  {
+    path: '/user/profil',
+    name: 'profile',
+    component: ProfileView
   }
 ]
 
