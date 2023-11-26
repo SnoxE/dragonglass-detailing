@@ -65,9 +65,10 @@
           </li>
         </ul>
         <ul v-else class="flex flex-col pl-10 pt-10 font-medium">
-          <li v-for="url in loggedUrls" :key="url.id">
-            <NavBarItem :url="url.url">{{ url.name }}</NavBarItem>
-          </li>
+          <router-link to="/user/profil">Profil</router-link>
+          <router-link to="/user/samochody">Samochody</router-link>
+          <router-link to="/user/rezerwacje">Rezerwacje</router-link>
+          <router-link to="" @click="logout()">Wyloguj</router-link>
         </ul>
       </div>
     </div>
