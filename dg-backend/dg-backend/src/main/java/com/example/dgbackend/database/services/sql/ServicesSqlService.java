@@ -22,10 +22,8 @@ public class ServicesSqlService {
     private static final Logger log = LoggerFactory.getLogger(ServicesSqlService.class);
     private static final String SELECT_SERVICE_BY_NAME =
             readSqlQuery("sql/select/services/select_service_by_name.sql");
-
     private static final String SELECT_SERVICE_ID_BY_NAME_AND_CAR_SIZE =
             readSqlQuery("sql/select/services/select_service_id_by_name_and_car_size.sql");
-
     private static final String SELECT_DISTINCT_SERVICES =
             readSqlQuery("sql/select/services/select_distinct_services.sql");
 

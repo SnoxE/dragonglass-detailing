@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
@@ -43,9 +44,16 @@ public class UserService {
         return userSqlService.getUserByEmail(email);
     }
 
-    public UserDto getUserByEmail(String email)
-    {
+    public UserDto getUserByEmail(String email) {
         return userSqlService.getUserByEmail(email);
+    }
+
+    public void changePassword(int userId, String password) {
+        userSqlService.changePassword(userId, password);
+    }
+
+    public String getPasswordByUserId(int userId) {
+        return userSqlService.getPasswordByUserId(userId);
     }
 
     public int getUserCountByEmail(String email)

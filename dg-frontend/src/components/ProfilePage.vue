@@ -53,9 +53,13 @@
           Zapisz
         </button>
       </form>
-      <form method="post" class="update-user-form flex w-80 flex-col">
-        <div class="mx-auto my-2 flex w-full flex-col gap-1 text-white">
-          <h1 class="mb-6 border-b-2 p-4 text-4xl font-medium text-white">ZMIEŃ HASŁO</h1>
+      <div class="mx-auto my-2 flex w-full flex-col text-white">
+        <h1 class="mb-6 border-b-2 pb-2 text-4xl font-medium text-white">ZMIEŃ HASŁO</h1>
+        <form
+          method="post"
+          class="update-user-form flex w-80 flex-col gap-1"
+          @submit.prevent="updatePassword"
+        >
           <span class="text-white">Stare hasło</span>
           <InputField
             id="old_password"
@@ -87,8 +91,14 @@
             required
           />
           <span v-if="!passwordsEqual" class="pl-2 text-sm text-red-600"> {{ passwordError }}</span>
-        </div>
-      </form>
+          <button
+            type="submit"
+            class="submit-btn mx-auto mt-2 w-full rounded-lg bg-gray-500 p-2 text-white hover:bg-mcl-orange"
+          >
+            Zmień hasło
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -203,6 +213,9 @@ export default {
         //   router.push(this.returnUrl || '/login')
         // }
       }
+    },
+    async updatePassword() {
+      // const response = await axios.
     }
   }
 }

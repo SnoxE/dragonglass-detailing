@@ -8,6 +8,7 @@ import OrdersView from '@/views/OrdersView.vue'
 import ReserveView from '@/views/ReserveView.vue'
 import CarsView from '@/views/CarsView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import AddCarView from '@/views/AddCarView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const routes = [
@@ -50,6 +51,11 @@ const routes = [
     path: '/user/profil',
     name: 'profile',
     component: ProfileView
+  },
+  {
+    path: '/user/dodaj-samochod',
+    name: 'addCar',
+    component: AddCarView
   }
 ]
 

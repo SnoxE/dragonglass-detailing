@@ -7,26 +7,6 @@
     <div class="mx-auto mt-4 flex flex-col">
       <form action="#" method="post" class="flex flex-col gap-5">
         <div class="flex flex-col gap-2">
-          <div class="mx-auto my-2 flex w-full flex-col gap-4">
-            <InputField
-              id="make"
-              v-model="make"
-              class="h-10 rounded bg-light-gray pl-2"
-              type="text"
-              name="make"
-              placeholder="Renault"
-              required
-            />
-            <InputField
-              id="model"
-              v-model="model"
-              class="h-10 rounded bg-light-gray pl-2"
-              type="text"
-              name="model"
-              placeholder="Clio 4"
-              required
-            />
-          </div>
           <label for="selector">Wybierz usługę</label>
           <select id="service" name="selector" class="h-10 rounded bg-light-gray pl-2">
             <option v-for="service in services" :key="service" :value="service.value">
@@ -55,11 +35,11 @@
 </template>
 
 <script>
-import InputField from '@/components/InputField.vue'
+// import InputField from '@/components/InputField.vue'
 
 export default {
   name: 'ReserveForm',
-  components: { InputField },
+  // components: { InputField },
   data() {
     return {
       inputFields: [
