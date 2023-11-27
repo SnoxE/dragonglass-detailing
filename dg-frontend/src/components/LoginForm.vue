@@ -45,7 +45,6 @@
 <script>
 import InputField from '@/components/InputField.vue'
 import { useAuthStore } from '@/stores/auth'
-import { isLoggedIn } from '@/authStatus.js'
 
 export default {
   name: 'LoginForm',
@@ -60,7 +59,6 @@ export default {
     onSubmit() {
       if (this.username != '' && this.password != '') {
         useAuthStore().login(this.username, this.password)
-        isLoggedIn.value = true
       }
     }
   }

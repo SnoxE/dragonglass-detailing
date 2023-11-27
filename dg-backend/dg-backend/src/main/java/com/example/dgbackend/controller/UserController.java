@@ -11,13 +11,11 @@ import com.example.dgbackend.service.ReservationService;
 import com.example.dgbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @RestController
@@ -96,6 +94,14 @@ public class UserController {
     @GetMapping("/{userId}/cars")
     public ContentDto<CarDto> getUserCars(@PathVariable("userId") String userId) {
         return carService.getUserCars(userId);
+    }
+
+    @DeleteMapping("{userId}/delete-car/{carId}")
+    public ResponseEntity<ResponseDto> deleteCar(
+            @PathVariable("userId") String userId,
+            @PathVariable("carId") String carId) {
+        carService.deleteCar(Integer.parseInt(userId), Integer.parseInt(carId));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{userId}/reservations")

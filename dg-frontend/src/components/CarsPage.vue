@@ -30,8 +30,18 @@
             <span class="text-lg"> {{ car.model }}</span>
           </div>
         </div>
-        <div class="my-auto flex flex-col px-5">
-          <span> {{ titleCase(car.colour.toLowerCase()) }}</span>
+        <div class="flex">
+          <div class="my-auto flex w-40 flex-col px-5">
+            <span> {{ titleCase(car.colour.toLowerCase()) }}</span>
+          </div>
+          <div class="my-auto">
+            <button
+              class="rounded-md border border-mcl-orange p-2 px-10 text-white"
+              @click="deleteCar(car.id)"
+            >
+              Usuń
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -72,9 +82,13 @@ export default {
         this.carList.push(car)
       })
     },
-    // async addCar() {
-    //   const response = await axios.post('api/users/' + this.userId + '/add-car')
-    // },
+    async deleteCar(carId) {
+      const response = await axios.delete('api/users/' + this.userId + '/delete-car/' + carId)
+      if (response.status == 200) {
+        this.carList.length = 0
+        await this.fetchUserCars()
+      }
+    },
     titleCase(input) {
       var splitInput = input.toLowerCase().split(' ')
       for (var i = 0; i < splitInput.length; i++) {

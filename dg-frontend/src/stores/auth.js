@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import router from '@/router/index.js'
+import { isLoggedIn } from '@/authStatus.js'
 import axios from 'axios'
 
 export const useAuthStore = defineStore({
@@ -24,6 +25,7 @@ export const useAuthStore = defineStore({
         localStorage.setItem('token', JSON.stringify(token))
         this.user = email
         this.token = token
+        isLoggedIn.value = true
         router.push(this.returnUrl || '/')
       }
     },

@@ -59,12 +59,10 @@
       >
         <ul v-if="!loggedIn" class="flex flex-col pl-10 pt-10 font-medium">
           <li v-for="url in urls" :key="url.id">
-            <NavBarItem v-if="url.id === 'login'" :url="url.url" @click="logout()">{{
-              url.name
-            }}</NavBarItem>
+            <NavBarItem v-if="url.id === 'login'" :url="url.url">{{ url.name }}</NavBarItem>
           </li>
         </ul>
-        <ul v-else class="flex flex-col pl-10 pt-10 font-medium">
+        <ul v-else class="flex flex-col pl-10 pt-10 font-medium text-white">
           <router-link to="/user/profil">Profil</router-link>
           <router-link to="/user/samochody">Samochody</router-link>
           <router-link to="/user/rezerwacje">Rezerwacje</router-link>
@@ -131,6 +129,8 @@ export default {
     logout() {
       useAuthStore().logout()
       isLoggedIn.value = false
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
     }
   }
 }

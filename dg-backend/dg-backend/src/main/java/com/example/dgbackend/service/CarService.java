@@ -33,6 +33,10 @@ public class CarService {
         carSqlService.createCar(userId, make, model, productionYear, size, colour);
     }
 
+    public void deleteCar(int userId, int carId) {
+        carSqlService.deleteCar(userId, carId);
+    }
+
     public ContentDto<CarDto> getUserCars(String userId) {
         List<CarDto> carDtoList = carSqlService.getCars(userId).stream().map(CarService::carDtoMapper).toList();
 

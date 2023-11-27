@@ -23,13 +23,13 @@
       <div class="mt-8 flex w-full justify-center">
         <router-link
           to="/oferta"
-          class="prices-btn mx-4 my-2 flex w-36 justify-center rounded-lg border border-solid border-mcl-orange bg-transparent px-6 py-2 font-medium text-white hover:bg-mcl-orange"
+          class="prices-btn mx-4 my-2 flex w-40 justify-center rounded-lg border border-solid border-mcl-orange bg-transparent px-6 py-2 font-medium text-white hover:bg-mcl-orange"
         >
           Nasza oferta
         </router-link>
         <router-link
           to="/rezerwuj"
-          class="prices-btn mx-4 my-2 flex w-36 justify-center rounded-lg border border-solid border-mcl-orange bg-transparent px-6 py-2 font-medium text-white hover:bg-mcl-orange"
+          class="prices-btn mx-4 my-2 flex w-40 justify-center rounded-lg border border-solid border-mcl-orange bg-transparent px-6 py-2 font-medium text-white hover:bg-mcl-orange"
         >
           Rezerwuj
         </router-link>

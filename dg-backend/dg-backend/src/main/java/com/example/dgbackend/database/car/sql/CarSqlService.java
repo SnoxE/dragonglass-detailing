@@ -25,6 +25,9 @@ public class CarSqlService {
     private static final String INSERT_INTO_CARS = readSqlQuery("sql/insert/insert_into_cars.sql");
     private static final String SELECT_CARS_BY_USER_ID =
             readSqlQuery("sql/select/cars/select_cars_by_user_id.sql");
+    private static final String DELETE_FROM_CARS_BY_USER_ID_AND_CAR_ID =
+            readSqlQuery("sql/delete/delete_car_by_user_id_and_car_id.sql");
+
 
     private final JdbcOperations jdbcOperations;
 
@@ -65,6 +68,19 @@ public class CarSqlService {
         return statement;
     }
 
+    private PreparedStatement preparedDeleteCarStatement(
+            Connection connection,
+            int userId,
+            int carId) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(DELETE_FROM_CARS_BY_USER_ID_AND_CAR_ID);
+
+        int parameterIndex = 0;
+        statement.setInt(++parameterIndex, userId);
+        statement.setInt(++parameterIndex, carId);
+
+        return statement;
+    }
+
     public Integer createCar(
             int userId,
             String make,
@@ -81,6 +97,18 @@ public class CarSqlService {
                     productionYear,
                     size,
                     colour));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public void deleteCar(
+            int userId,
+            int carId) throws DgAuthException {
+        try {
+            jdbcOperations.update(con -> preparedDeleteCarStatement(con,
+                    userId,
+                    carId));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
