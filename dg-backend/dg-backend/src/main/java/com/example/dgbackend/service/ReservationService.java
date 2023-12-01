@@ -40,9 +40,10 @@ public class ReservationService {
             int userId,
             int serviceId,
             int carId,
-            Timestamp dateTime) {
+            Timestamp startAt,
+            Timestamp endAt) {
 
-        return addReservationSqlService.createReservation(userId, serviceId, carId, dateTime);
+        return addReservationSqlService.createReservation(userId, serviceId, carId, startAt, endAt);
     }
 
     public ContentDto<ReservationDto> getUserReservations(String userId) {

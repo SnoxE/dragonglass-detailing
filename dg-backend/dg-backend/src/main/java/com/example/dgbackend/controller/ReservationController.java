@@ -39,7 +39,8 @@ public class ReservationController {
                 Integer.parseInt(userId),
                 addReservationDto.serviceId(),
                 addReservationDto.carId(),
-                Timestamp.valueOf(addReservationDto.startAt()));
+                Timestamp.valueOf(addReservationDto.startAt()),
+                Timestamp.valueOf(addReservationDto.endAt()));
 
         return ResponseEntity.ok().build();
     }

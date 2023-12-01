@@ -7,10 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 
 import static com.example.dgbackend.common.resource.ResourceManager.readSqlQuery;
 
@@ -31,7 +28,8 @@ public class AddReservationSqlService {
             int userId,
             int serviceId,
             int carId,
-            Timestamp dateTime) throws SQLException {
+            Timestamp startAt,
+            Timestamp endAt) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(INSERT_INTO_RESERVATIONS);
 
         int parameterIndex = 0;
@@ -39,7 +37,8 @@ public class AddReservationSqlService {
         statement.setInt(++parameterIndex, userId);
         statement.setInt(++parameterIndex, serviceId);
         statement.setInt(++parameterIndex, carId);
-        statement.setTimestamp(++parameterIndex, dateTime);
+        statement.setTimestamp(++parameterIndex, startAt);
+        statement.setTimestamp(++parameterIndex, endAt);
 
         return statement;
     }
@@ -48,14 +47,16 @@ public class AddReservationSqlService {
             int userId,
             int serviceId,
             int carId,
-            Timestamp dateTime) throws DgAuthException {
+            Timestamp startAt,
+            Timestamp endAt) throws DgAuthException {
         try {
             return jdbcOperations.update(con -> preparedInsertIntoReservationsQuery(
                     con,
                     userId,
                     serviceId,
                     carId,
-                    dateTime));
+                    startAt,
+                    endAt));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
