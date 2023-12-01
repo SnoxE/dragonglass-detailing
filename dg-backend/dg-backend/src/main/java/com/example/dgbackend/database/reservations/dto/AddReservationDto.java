@@ -8,4 +8,5 @@ public record AddReservationDto(
         @JsonProperty("id") int id,
         @JsonProperty("service_id") int serviceId,
         @JsonProperty("car_id") int carId,
-        @JsonProperty("start_at") String startAt) {}
+        @JsonProperty("start_at") String startAt,
+        @JsonProperty("end_at") String endAt) {}

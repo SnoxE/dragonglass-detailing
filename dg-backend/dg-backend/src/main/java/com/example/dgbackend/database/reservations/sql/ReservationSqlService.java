@@ -20,6 +20,8 @@ public class ReservationSqlService {
     private static final Logger log = LoggerFactory.getLogger(ReservationSqlService.class);
     public static final String SELECT_RESERVATIONS_BY_USER_ID =
             readSqlQuery("sql/select/reservations/select_reservations_by_user_id.sql");
+    public static final String SELECT_RESERVATIONS =
+            readSqlQuery("sql/select/reservations/select_reservations.sql");
 
     JdbcOperations jdbcOperations;
 
@@ -44,6 +46,22 @@ public class ReservationSqlService {
                 });
     }
 
+    public List<ReservationStartEndTimesSqlRow> getReservationStartEndTimes() {
+        return jdbcOperations.query(
+                con -> con.prepareStatement(SELECT_RESERVATIONS),
+                (rs, rowNum) -> {
+                    try {
+                        return extractReservationStartEndTimesRow(rs);
+                    } catch (JsonProcessingException e) {
+                        log.error(
+                                "Unable to retrieve cars due to unexpected exception (message={})",
+                                e.getMessage(),
+                                e);
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
     private PreparedStatement preparedSelectReservationByUserIdQuery(
             Connection connection,
             String userId) throws SQLException {
@@ -55,6 +73,12 @@ public class ReservationSqlService {
         return statement;
     }
 
+//    private PreparedStatement preparedSelectReservations(
+//            Connection connection) throws SQLException {
+//
+//        return connection.prepareStatement(SELECT_RESERVATIONS);
+//    }
+
     private ReservationSqlRow extractReservationRow(ResultSet resultSet) throws SQLException, JsonProcessingException {
         return new ReservationSqlRow(
                 resultSet.getInt(ReservationSqlRow.ID),
@@ -65,5 +89,12 @@ public class ReservationSqlService {
                 resultSet.getString(ReservationSqlRow.CARS_YEAR),
                 resultSet.getString(ReservationSqlRow.CARS_COLOUR),
                 resultSet.getTimestamp(ReservationSqlRow.RES_START_AT));
+    }
+
+    private ReservationStartEndTimesSqlRow extractReservationStartEndTimesRow(ResultSet resultSet)
+            throws SQLException, JsonProcessingException {
+        return new ReservationStartEndTimesSqlRow(
+                resultSet.getTimestamp(ReservationStartEndTimesSqlRow.START_AT).toLocalDateTime(),
+                resultSet.getTimestamp(ReservationStartEndTimesSqlRow.END_AT).toLocalDateTime());
     }
 }

@@ -1,17 +1,19 @@
 package com.example.dgbackend.controller;
 
 import com.example.dgbackend.common.ResponseDto;
+import com.example.dgbackend.common.dto.ContentDto;
 import com.example.dgbackend.database.reservations.dto.AddReservationDto;
 import com.example.dgbackend.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -22,6 +24,11 @@ public class ReservationController {
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
+    }
+
+    @GetMapping("/get-daily-hours")
+    public Map<LocalDate, List<LocalTime>> getAvailableDailyHours() {
+        return reservationService.getAvailableSlots();
     }
 
     @PostMapping("/{userId}/addReservation")

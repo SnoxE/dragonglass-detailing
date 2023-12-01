@@ -26,7 +26,7 @@ public class ServicesService {
         List<ServiceDto> serviceDtoList = servicesSqlService.getServiceByName(serviceName)
                 .stream().map(ServicesService::serviceDtoMapper).toList();
 
-    return new ContentDto<>(serviceDtoList);
+        return new ContentDto<>(serviceDtoList);
     }
 
     public ContentDto<ServiceNamesDto> getServiceNames() {
