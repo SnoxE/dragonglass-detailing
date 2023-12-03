@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ReservationController {
         return reservationService.getAvailableSlots(lengthHours, lengthMinutes);
     }
 
-    @PostMapping("/{userId}/addReservation")
+    @PostMapping("/{userId}/add-reservation")
     public ResponseEntity<ResponseDto> addReservation(
             @PathVariable("userId") String userId,
             @RequestBody AddReservationDto addReservationDto) {
@@ -41,10 +42,11 @@ public class ReservationController {
                 Integer.parseInt(userId),
                 addReservationDto.serviceId(),
                 addReservationDto.carId(),
-                Timestamp.valueOf(addReservationDto.startAt()),
-                Timestamp.valueOf(addReservationDto.endAt()));
+                addReservationDto.startAtDate(),
+                addReservationDto.startAtTime(),
+                addReservationDto.length());
 
-        return ResponseEntity.ok().build();
+    return ResponseEntity.ok().build();
     }
 
 }

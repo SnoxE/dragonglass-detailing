@@ -5,7 +5,7 @@
     </div>
 
     <div class="mx-auto mt-4 flex flex-col">
-      <form action="#" method="post" class="flex flex-col gap-5">
+      <form method="post" class="flex flex-col gap-5" @submit.prevent="addReservation">
         <div class="flex flex-col gap-2">
           <label for="service-selector">Wybierz usługę</label>
           <select
@@ -59,6 +59,9 @@
           <button type="submit" class="rounded-md bg-mcl-orange p-2 px-10">Zarezerwuj</button>
         </div>
       </form>
+      <div v-if="reservationSuccessful" class="mx-auto mt-4">
+        <span>Rezerwacja została złożona</span>
+      </div>
     </div>
   </div>
 </template>
@@ -81,7 +84,8 @@ export default {
       selectedDate: '',
       timeList: [],
       selectedTime: '',
-      availableSlots: []
+      availableSlots: [],
+      reservationSuccessful: false
     }
   },
   watch: {
@@ -151,6 +155,24 @@ export default {
     updateAvailableSlots() {
       if (this.selectedService && this.selectedCar && this.selectedDate) {
         this.getAvailableTimes()
+      }
+    },
+    async addReservation() {
+      const serviceInfo = await this.getServiceInfo()
+      const length = this.extractTimeFromString(serviceInfo.length)
+      const response = await axios.post('api/reservations/' + this.userId + '/add-reservation', {
+        service_id: serviceInfo.id,
+        car_id: parseInt(this.selectedCar.id),
+        start_at_date: this.getDateFromPicker(),
+        start_at_time: this.selectedTime,
+        length: {
+          hours: parseInt(length.hours),
+          minutes: parseInt(length.minutes)
+        }
+      })
+
+      if (response.status == 200) {
+        this.reservationSuccessful = true
       }
     }
   }

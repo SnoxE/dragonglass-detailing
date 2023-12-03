@@ -47,16 +47,16 @@ public class AddReservationSqlService {
             int userId,
             int serviceId,
             int carId,
-            Timestamp startAt,
-            Timestamp endAt) throws DgAuthException {
+            String startAt,
+            String endAt) throws DgAuthException {
         try {
             return jdbcOperations.update(con -> preparedInsertIntoReservationsQuery(
                     con,
                     userId,
                     serviceId,
                     carId,
-                    startAt,
-                    endAt));
+                    Timestamp.valueOf(startAt),
+                    Timestamp.valueOf(endAt)));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

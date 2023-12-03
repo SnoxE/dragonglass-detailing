@@ -1,8 +1,8 @@
 package com.example.dgbackend.service;
 
 import com.example.dgbackend.common.dto.ContentDto;
-import com.example.dgbackend.database.car.CarDto;
-import com.example.dgbackend.database.car.sql.CarSqlRow;
+
+import com.example.dgbackend.database.reservations.dto.AddReservationDto.LengthDto;
 import com.example.dgbackend.database.reservations.dto.ReservationDto;
 import com.example.dgbackend.database.reservations.dto.ReservationStartEndTimes;
 import com.example.dgbackend.database.reservations.sql.AddReservationSqlService;
@@ -13,12 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.chrono.ChronoLocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,10 +38,18 @@ public class ReservationService {
             int userId,
             int serviceId,
             int carId,
-            Timestamp startAt,
-            Timestamp endAt) {
+            String startAtDate,
+            String startAtTime,
+            LengthDto lengthDto) {
+        String startDateTime = startAtDate + " " + startAtTime;
+        LocalTime endTime = LocalTime
+                .parse(startAtTime)
+                .plusHours(lengthDto.hours())
+                .plusMinutes(lengthDto.minutes());
 
-        return addReservationSqlService.createReservation(userId, serviceId, carId, startAt, endAt);
+        String endDateTime = startAtDate + " " + endTime.toString() + ":00";
+
+        return addReservationSqlService.createReservation(userId, serviceId, carId, startDateTime, endDateTime);
     }
 
     public ContentDto<ReservationDto> getUserReservations(String userId) {
