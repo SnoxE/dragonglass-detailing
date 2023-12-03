@@ -7,6 +7,7 @@ import com.example.dgbackend.service.ServicesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -27,9 +28,9 @@ public class ServicesController {
     }
 
     @GetMapping("/{serviceName}/{carSize}")
-    public Optional<Integer> getServiceId(
+    public List<ServiceDto> getServiceId(
             @PathVariable("serviceName")String serviceName,
             @PathVariable("carSize")String carSize) {
-        return servicesService.getServiceIdByNameAndCarSize(serviceName, carSize);
+        return servicesService.getServiceByNameAndCarSize(serviceName, carSize);
     }
 }

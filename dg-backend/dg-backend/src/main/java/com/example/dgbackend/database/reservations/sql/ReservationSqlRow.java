@@ -10,7 +10,8 @@ public record ReservationSqlRow(
         String carsModel,
         String carsYear,
         String carsColour,
-        Timestamp resStartAt) {
+        Timestamp resStartAt,
+        Timestamp resEndAt) {
     public static final String ID = "res_id";
     public static final String SERVICES_NAME = "services_name";
     public static final String SERVICES_PRICE = "services_price";
@@ -19,4 +20,5 @@ public record ReservationSqlRow(
     public static final String CARS_YEAR = "cars_year";
     public static final String CARS_COLOUR = "cars_colour";
     public static final String RES_START_AT = "res_start_at";
+    public static final String RES_END_AT = "res_end_at";
 }

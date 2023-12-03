@@ -12,4 +12,5 @@ public record ReservationDto(
         @JsonProperty("cars_model") String carsModel,
         @JsonProperty("cars_year") String carsYear,
         @JsonProperty("cars_colour") String carsColour,
-        @JsonProperty("res_start_at") Timestamp resStartAt) {}
+        @JsonProperty("res_start_at") Timestamp resStartAt,
+        @JsonProperty("res_end_at") Timestamp resEndAt) {}

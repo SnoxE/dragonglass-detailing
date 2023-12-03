@@ -17,6 +17,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +64,8 @@ public class ReservationService {
                 reservationSqlRow.carsModel(),
                 reservationSqlRow.carsYear(),
                 reservationSqlRow.carsColour(),
-                reservationSqlRow.resStartAt());
+                reservationSqlRow.resStartAt(),
+                reservationSqlRow.resEndAt());
     }
 
     public static List<LocalTime> generateDailyTimeSlots() {
@@ -72,7 +75,7 @@ public class ReservationService {
 
         while(startTime.isBefore(endTime)) {
             timeSlots.add(startTime);
-            startTime = startTime.plusHours(1);
+            startTime = startTime.plusMinutes(30);
         }
 
         return timeSlots;
@@ -90,20 +93,29 @@ public class ReservationService {
     public Map<LocalDate, List<LocalTime>> filterSlots(
             Map<LocalDate, List<LocalTime>> slots,
             List<ReservationStartEndTimes> reservations,
-            int serviceLength) {
+            int lengthHours,
+            int lengthMinutes) {
         Map<LocalDate, List<LocalTime>> availableSlots = new HashMap<>();
+        LocalTime closingTime = LocalTime.of(19, 0);
 
         for (Map.Entry<LocalDate, List<LocalTime>> entry : slots.entrySet()) {
             LocalDate date = entry.getKey();
             List<LocalTime> dailySlots = new ArrayList<>(entry.getValue());
+
+            dailySlots.removeIf(slot ->
+                    date.atTime(slot).plusHours(lengthHours).plusMinutes(lengthMinutes)
+                            .isAfter(date.atTime(closingTime))
+            );
 
             for (ReservationStartEndTimes reservation : reservations) {
 
                 if (reservation.startAt().toLocalDate().equals(date)
                         || reservation.endAt().toLocalDate().equals(date)) {
                     dailySlots.removeIf(
-                            slot -> !date.atTime(slot).plusHours(serviceLength).isBefore(reservation.startAt()) &&
-                                    !date.atTime(slot).isAfter(reservation.endAt())
+                            slot -> date.atTime(slot)
+                                    .plusHours(lengthHours)
+                                    .plusMinutes(lengthMinutes).isAfter(reservation.startAt()) &&
+                                    date.atTime(slot).isBefore(reservation.endAt())
                     );
                 }
             }
@@ -114,15 +126,14 @@ public class ReservationService {
         return availableSlots;
     }
 
-    public Map<LocalDate, List<LocalTime>> getAvailableSlots() {
+    public Map<LocalDate, List<LocalTime>> getAvailableSlots(int lengthHours, int lengthMinutes) {
         Map<LocalDate, List<LocalTime>> slots = generateTimeSlotsForRange(
-                LocalDate.parse("2023-11-13"),
-                2);
+                LocalDate.now(),
+                14);
         List<ReservationStartEndTimes> reservations = reservationSqlService.getReservationStartEndTimes()
                         .stream().map(this::toReservationStartEndTimes).toList();
-        int serviceLength = 2;
 
-        return filterSlots(slots, reservations, serviceLength);
+        return filterSlots(slots, reservations, lengthHours, lengthMinutes);
     }
 
     private ReservationStartEndTimes toReservationStartEndTimes(

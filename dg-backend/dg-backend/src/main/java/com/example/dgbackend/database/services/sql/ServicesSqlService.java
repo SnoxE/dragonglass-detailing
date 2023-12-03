@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.dgbackend.common.resource.ResourceManager.readSqlQuery;
-import static com.example.dgbackend.database.services.sql.ServicesSqlRow.ServiceNamesSqlRow;
+import static com.example.dgbackend.database.services.sql.ServiceSqlRow.ServiceNamesSqlRow;
 
 @Service
 public class ServicesSqlService {
@@ -22,8 +22,8 @@ public class ServicesSqlService {
     private static final Logger log = LoggerFactory.getLogger(ServicesSqlService.class);
     private static final String SELECT_SERVICE_BY_NAME =
             readSqlQuery("sql/select/services/select_service_by_name.sql");
-    private static final String SELECT_SERVICE_ID_BY_NAME_AND_CAR_SIZE =
-            readSqlQuery("sql/select/services/select_service_id_by_name_and_car_size.sql");
+    private static final String SELECT_SERVICE_BY_NAME_AND_CAR_SIZE =
+            readSqlQuery("sql/select/services/select_service_by_name_and_car_size.sql");
     private static final String SELECT_DISTINCT_SERVICES =
             readSqlQuery("sql/select/services/select_distinct_services.sql");
 
@@ -42,7 +42,20 @@ public class ServicesSqlService {
         return statement;
     }
 
-    public List<ServicesSqlRow> getServiceByName(String serviceName) {
+    private PreparedStatement preparedSelectServiceByNameAndCarSizeStatement(
+            Connection connection,
+            String serviceName,
+            String carSize) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SELECT_SERVICE_BY_NAME_AND_CAR_SIZE);
+
+        int parameterIndex = 0;
+        statement.setString(++parameterIndex, serviceName);
+        statement.setString(++parameterIndex, carSize);
+
+        return statement;
+    }
+
+    public List<ServiceSqlRow> getServiceByName(String serviceName) {
         return jdbcOperations.query(
             con -> preparedSelectServiceByNameStatement(con, serviceName),
             (rs, rowNum) -> {
@@ -75,21 +88,32 @@ public class ServicesSqlService {
                 });
     }
 
-    public Optional<Integer> getServiceIdByNameAndCarSize(String serviceName, String carSize) {
-        return Optional.ofNullable(jdbcOperations.queryForObject(
-                SELECT_SERVICE_ID_BY_NAME_AND_CAR_SIZE,
-                Integer.class,
-                serviceName,
-                carSize));
+    public List<ServiceSqlRow> getServiceByNameAndCarSize(String serviceName, String carSize) {
+        return jdbcOperations.query(
+                con -> preparedSelectServiceByNameAndCarSizeStatement(con, serviceName, carSize),
+                (rs, rowNum) -> {
+                    try {
+                        return extractServiceRow(rs);
+                    } catch (JsonProcessingException e) {
+                        log.error(
+                                "Unable to retrieve service due to unexpected exception (serviceName={}, " +
+                                        "carSize={}, message={})",
+                                serviceName,
+                                carSize,
+                                e.getMessage(),
+                                e);
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
-    private ServicesSqlRow extractServiceRow(ResultSet resultSet) throws SQLException, JsonProcessingException {
-        return new ServicesSqlRow(
-                resultSet.getInt(ServicesSqlRow.ID),
-                resultSet.getString(ServicesSqlRow.NAME),
-                resultSet.getInt(ServicesSqlRow.PRICE),
-                resultSet.getTime(ServicesSqlRow.LENGTH),
-                resultSet.getString(ServicesSqlRow.CAR_SIZE));
+    private ServiceSqlRow extractServiceRow(ResultSet resultSet) throws SQLException, JsonProcessingException {
+        return new ServiceSqlRow(
+                resultSet.getInt(ServiceSqlRow.ID),
+                resultSet.getString(ServiceSqlRow.NAME),
+                resultSet.getInt(ServiceSqlRow.PRICE),
+                resultSet.getTime(ServiceSqlRow.LENGTH),
+                resultSet.getString(ServiceSqlRow.CAR_SIZE));
     }
 
     private ServiceNamesSqlRow extractServiceNamesRow(ResultSet resultSet) throws SQLException, JsonProcessingException {

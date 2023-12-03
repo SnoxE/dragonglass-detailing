@@ -73,12 +73,6 @@ public class ReservationSqlService {
         return statement;
     }
 
-//    private PreparedStatement preparedSelectReservations(
-//            Connection connection) throws SQLException {
-//
-//        return connection.prepareStatement(SELECT_RESERVATIONS);
-//    }
-
     private ReservationSqlRow extractReservationRow(ResultSet resultSet) throws SQLException, JsonProcessingException {
         return new ReservationSqlRow(
                 resultSet.getInt(ReservationSqlRow.ID),
@@ -88,7 +82,8 @@ public class ReservationSqlService {
                 resultSet.getString(ReservationSqlRow.CARS_MODEL),
                 resultSet.getString(ReservationSqlRow.CARS_YEAR),
                 resultSet.getString(ReservationSqlRow.CARS_COLOUR),
-                resultSet.getTimestamp(ReservationSqlRow.RES_START_AT));
+                resultSet.getTimestamp(ReservationSqlRow.RES_START_AT),
+                resultSet.getTimestamp(ReservationSqlRow.RES_END_AT));
     }
 
     private ReservationStartEndTimesSqlRow extractReservationStartEndTimesRow(ResultSet resultSet)

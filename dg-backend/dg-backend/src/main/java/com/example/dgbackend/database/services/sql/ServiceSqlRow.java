@@ -2,7 +2,7 @@ package com.example.dgbackend.database.services.sql;
 
 import java.sql.Time;
 
-public record ServicesSqlRow(
+public record ServiceSqlRow(
         int id,
         String name,
         int price,

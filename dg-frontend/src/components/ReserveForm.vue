@@ -7,27 +7,56 @@
     <div class="mx-auto mt-4 flex flex-col">
       <form action="#" method="post" class="flex flex-col gap-5">
         <div class="flex flex-col gap-2">
-          <label for="selector">Wybierz usługę</label>
-          <select id="service" name="selector" class="h-10 rounded bg-light-gray pl-2">
-            <option v-for="service in services" :key="service" :value="service.value">
+          <label for="service-selector">Wybierz usługę</label>
+          <select
+            id="service-selector"
+            v-model="selectedService"
+            name="service-selector"
+            class="h-10 rounded bg-light-gray pl-2"
+          >
+            <option v-for="service in services" :key="service" :value="service.name">
               {{ service.name }}
             </option>
           </select>
         </div>
         <div class="flex flex-col gap-2">
-          <label for="date">Wybierz datę</label>
+          <label for="car-selector">Wybierz samochód</label>
+          <select
+            id="car-selector"
+            v-model="selectedCar"
+            name="car-selector"
+            class="h-10 rounded bg-light-gray pl-2"
+          >
+            <option v-for="car in carList" :key="car" :value="car">
+              {{ car.production_year }} {{ car.make }} {{ car.model }}
+            </option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="date-picker">Wybierz datę</label>
           <VueDatePicker
             id="date"
-            v-model="date"
+            v-model="selectedDate"
+            name="date-picker"
             dark
             :enable-time-picker="false"
-            :min-time="{ hours: 10, minutes: 0 }"
           />
         </div>
+        <div class="flex flex-col gap-2">
+          <label for="time-selector">Wybierz godzinę</label>
+          <select
+            id="time-selector"
+            v-model="selectedTime"
+            name="time-selector"
+            class="h-10 rounded bg-light-gray pl-2"
+          >
+            <option v-for="slot in availableSlots" :key="slot" :value="slot">
+              {{ slot }}
+            </option>
+          </select>
+        </div>
         <div class="mx-auto">
-          <button type="submit" class="rounded-md bg-mcl-orange p-2 px-10" @click.prevent="xd">
-            Zarezerwuj
-          </button>
+          <button type="submit" class="rounded-md bg-mcl-orange p-2 px-10">Zarezerwuj</button>
         </div>
       </form>
     </div>
@@ -35,60 +64,99 @@
 </template>
 
 <script>
-// import InputField from '@/components/InputField.vue'
-
 export default {
   name: 'ReserveForm',
-  // components: { InputField },
   data() {
     return {
-      inputFields: [
-        { id: 'name', type: 'text', name: 'name', label: 'Imię', placeholder: 'Jan' },
-        {
-          id: 'surname',
-          type: 'text',
-          name: 'surname',
-          label: 'Nazwisko',
-          placeholder: 'Kowalski'
-        },
-        {
-          id: 'email',
-          type: 'text',
-          name: 'email',
-          label: 'Email',
-          placeholder: 'nazwa@gmail.com'
-        }
-      ],
       services: [],
       carSizes: [
         { value: 'small', name: 'Małe' },
         { value: 'medium', name: 'Średnie' },
         { value: 'large', name: 'Duże' }
       ],
-      make: '',
-      model: '',
-      year: '',
-      colour: '',
-      size: ''
+      userId: '',
+      carList: [],
+      selectedCar: '',
+      selectedService: '',
+      selectedDate: '',
+      timeList: [],
+      selectedTime: '',
+      availableSlots: []
     }
+  },
+  watch: {
+    selectedService: 'updateAvailableSlots',
+    selectedCar: 'updateAvailableSlots',
+    selectedDate: 'updateAvailableSlots'
   },
   async mounted() {
     await this.getServices()
+    await this.fetchUserId()
+    await this.fetchUserCars()
   },
   methods: {
+    async fetchUserId() {
+      const response = await axios.get('api/users/user')
+      this.userId = response.data['id']
+    },
+    async fetchUserCars() {
+      const response = await axios.get('api/users/' + this.userId + '/cars')
+      const carList = response.data['content']
+
+      carList.forEach((car) => {
+        this.carList.push(car)
+      })
+    },
     async getServices() {
       const response = await axios.get('api/services')
       this.services = response.data['content']
-      console.log(this.services)
     },
-    xd() {}
+    async getServiceInfo() {
+      const response = await axios.get(
+        'api/services/' + this.selectedService + '/' + this.selectedCar.size
+      )
+      return response.data[0]
+    },
+    async getAvailableTimes() {
+      const serviceInfo = await this.getServiceInfo()
+      const length = this.extractTimeFromString(serviceInfo.length)
+      const response = await axios.get('api/reservations/daily-hours', {
+        params: {
+          length_hours: parseInt(length.hours),
+          length_minutes: parseInt(length.minutes)
+        }
+      })
+
+      this.availableSlots = response.data[this.getDateFromPicker()]
+    },
+    getDateFromPicker() {
+      if (this.selectedDate != '') {
+        const day = String(this.selectedDate.getDate()).padStart(2, '0')
+        const month = String(this.selectedDate.getMonth() + 1).padStart(2, '0')
+        const year = this.selectedDate.getFullYear()
+
+        return `${year}-${month}-${day}`
+      } else {
+        return ''
+      }
+    },
+    extractTimeFromString(time) {
+      const timeArray = time.split(':')
+      return {
+        hours: timeArray[0],
+        minutes: timeArray[1],
+        seconds: timeArray[2]
+      }
+    },
+    updateAvailableSlots() {
+      if (this.selectedService && this.selectedCar && this.selectedDate) {
+        this.getAvailableTimes()
+      }
+    }
   }
 }
 </script>
 
 <script setup>
 import axios from 'axios'
-import { ref } from 'vue'
-
-const date = ref(new Date())
 </script>

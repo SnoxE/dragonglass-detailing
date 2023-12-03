@@ -33,12 +33,15 @@
         <div class="bg w-1/4 rounded-l-lg bg-light-gray py-6 pl-6">
           <div class="flex flex-col">
             <span> {{ extractDateAndTime(order.res_start_at)['date'] }}</span>
-            <span> {{ extractDateAndTime(order.res_start_at)['time'] }}</span>
+            <span>
+              {{ extractDateAndTime(order.res_start_at)['time'] }} -
+              {{ extractDateAndTime(order.res_end_at)['time'] }}</span
+            >
             <span class="text-xkom-gray"> nr {{ order.res_id }}</span>
             <span class="mt-2">{{ order.services_price }} zł</span>
           </div>
         </div>
-        <div class="bg-dark-gray flex w-3/4 justify-between rounded-r-lg">
+        <div class="flex w-3/4 justify-between rounded-r-lg bg-dark-gray">
           <div class="my-auto flex flex-col px-10">
             <span class="justify-end text-xl font-medium"> {{ order.services_name }}</span>
             <span class="text-lg">

@@ -26,9 +26,11 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping("/get-daily-hours")
-    public Map<LocalDate, List<LocalTime>> getAvailableDailyHours() {
-        return reservationService.getAvailableSlots();
+    @GetMapping("/daily-hours")
+    public Map<LocalDate, List<LocalTime>> getAvailableDailyHours(
+            @RequestParam("length_hours") int lengthHours,
+            @RequestParam("length_minutes") int lengthMinutes) {
+        return reservationService.getAvailableSlots(lengthHours, lengthMinutes);
     }
 
     @PostMapping("/{userId}/addReservation")

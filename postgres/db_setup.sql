@@ -1,4 +1,4 @@
-CREATE TYPE public.car_size AS ENUM ('SMALL', 'MEDIUM', 'LARGE');
+CREATE TYPE public.car_size AS ENUM ('MAŁE', 'ŚREDNIE', 'DUŻE');
 
 create table users(
 	id integer NOT NULL primary key generated always as identity,
@@ -30,37 +30,37 @@ create table services(
   size car_size NOT NULL
 );
 
-insert into services(name, price, length, car_size) values ('Mycie Ręczne', '100', '00:01:00', 'SMALL');
-insert into services(name, price, length, car_size) values ('Mycie Ręczne', '120', '00:01:15', 'MEDIUM');
-insert into services(name, price, length, car_size) values ('Mycie Ręczne', '140', '00:01:30', 'LARGE');
+insert into services(name, price, length, car_size) values ('Mycie Ręczne', '100', '01:00:00', 'MAŁE');
+insert into services(name, price, length, car_size) values ('Mycie Ręczne', '120', '01:15:00', 'ŚREDNIE');
+insert into services(name, price, length, car_size) values ('Mycie Ręczne', '140', '01:30:00', 'DUŻE');
 
-insert into services(name, price, length, car_size) values ('Woskowanie', '400', '00:03:00', 'SMALL');
-insert into services(name, price, length, car_size) values ('Woskowanie', '500', '00:03:15', 'MEDIUM');
-insert into services(name, price, length, car_size) values ('Woskowanie', '600', '00:03:30', 'LARGE');
+insert into services(name, price, length, car_size) values ('Woskowanie', '400', '03:00:00', 'MAŁE');
+insert into services(name, price, length, car_size) values ('Woskowanie', '500', '03:15:00', 'ŚREDNIE');
+insert into services(name, price, length, car_size) values ('Woskowanie', '600', '03:30:00', 'DUŻE');
 
-insert into services(name, price, length, car_size) values ('One Polish', '1000', '00:04:00', 'SMALL');
-insert into services(name, price, length, car_size) values ('One Polish', '1100', '00:04:30', 'MEDIUM');
-insert into services(name, price, length, car_size) values ('One Polish', '1200', '00:05:00', 'LARGE');
+insert into services(name, price, length, car_size) values ('One Polish', '1000', '04:00:00', 'MAŁE');
+insert into services(name, price, length, car_size) values ('One Polish', '1100', '04:30:00', 'ŚREDNIE');
+insert into services(name, price, length, car_size) values ('One Polish', '1200', '05:00:00', 'DUŻE');
 
-insert into services(name, price, length, car_size) values ('Powłoka Ceramiczna', '1800', '00:06:00', 'SMALL');
-insert into services(name, price, length, car_size) values ('Powłoka Ceramiczna', '2100', '00:06:30', 'MEDIUM');
-insert into services(name, price, length, car_size) values ('Powłoka Ceramiczna', '2400', '00:07:00', 'LARGE');
+insert into services(name, price, length, car_size) values ('Powłoka Ceramiczna', '1800', '06:00:00', 'MAŁE');
+insert into services(name, price, length, car_size) values ('Powłoka Ceramiczna', '2100', '06:30:00', 'ŚREDNIE');
+insert into services(name, price, length, car_size) values ('Powłoka Ceramiczna', '2400', '07:00:00', 'DUŻE');
 
-insert into services(name, price, length, car_size) values ('Korekta Lakieru', '1500', '00:08:00', 'SMALL');
-insert into services(name, price, length, car_size) values ('Korekta Lakieru', '1800', '00:09:00', 'MEDIUM');
-insert into services(name, price, length, car_size) values ('Korekta Lakieru', '2100', '00:10:00', 'LARGE');
+insert into services(name, price, length, car_size) values ('Korekta Lakieru', '1500', '08:00:00', 'MAŁE');
+insert into services(name, price, length, car_size) values ('Korekta Lakieru', '1800', '09:00:00', 'ŚREDNIE');
+insert into services(name, price, length, car_size) values ('Korekta Lakieru', '2100', '10:00:00', 'DUŻE');
 
-insert into services(name, price, length, car_size) values ('Pranie Podstawowe', '300', '00:03:00', 'SMALL');
-insert into services(name, price, length, car_size) values ('Pranie Podstawowe', '375', '00:03:30', 'MEDIUM');
-insert into services(name, price, length, car_size) values ('Pranie Podstawowe', '450', '00:04:00', 'LARGE');
+insert into services(name, price, length, car_size) values ('Pranie Podstawowe', '300', '03:00:00', 'MAŁE');
+insert into services(name, price, length, car_size) values ('Pranie Podstawowe', '375', '03:30:00', 'ŚREDNIE');
+insert into services(name, price, length, car_size) values ('Pranie Podstawowe', '450', '04:00:00', 'DUŻE');
 
-insert into services(name, price, length, car_size) values ('Detailing Wnętrza', '600', '00:06:00', 'SMALL');
-insert into services(name, price, length, car_size) values ('Detailing Wnętrza', '675', '00:06:30', 'MEDIUM');
-insert into services(name, price, length, car_size) values ('Detailing Wnętrza', '750', '00:07:00', 'LARGE');
+insert into services(name, price, length, car_size) values ('Detailing Wnętrza', '600', '06:00:00', 'MAŁE');
+insert into services(name, price, length, car_size) values ('Detailing Wnętrza', '675', '06:30:00', 'ŚREDNIE');
+insert into services(name, price, length, car_size) values ('Detailing Wnętrza', '750', '07:00:00', 'DUŻE');
 
-insert into services(name, price, length, car_size) values ('Niewidzialna Wycieraczka', '100', '00:00:40', 'SMALL');
-insert into services(name, price, length, car_size) values ('Niewidzialna Wycieraczka', '120', '00:00:50', 'MEDIUM');
-insert into services(name, price, length, car_size) values ('Niewidzialna Wycieraczka', '140', '00:01:00', 'LARGE');
+insert into services(name, price, length, car_size) values ('Niewidzialna Wycieraczka', '100', '00:40:00', 'MAŁE');
+insert into services(name, price, length, car_size) values ('Niewidzialna Wycieraczka', '120', '00:50:00', 'ŚREDNIE');
+insert into services(name, price, length, car_size) values ('Niewidzialna Wycieraczka', '140', '01:00:00', 'DUŻE');
 
 -- RESERVATIONS TABLE
 
