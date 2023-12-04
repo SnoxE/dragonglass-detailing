@@ -7,6 +7,7 @@ import com.example.dgbackend.database.reservations.dto.ReservationDto;
 import com.example.dgbackend.database.user.dto.PasswordDto;
 import com.example.dgbackend.database.user.dto.UserDto;
 import com.example.dgbackend.service.CarService;
+import com.example.dgbackend.service.EmailService;
 import com.example.dgbackend.service.ReservationService;
 import com.example.dgbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class UserController {
     CarService carService;
     @Autowired
     ReservationService reservationService;
+    @Autowired
+    EmailService emailService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -44,6 +47,8 @@ public class UserController {
                 userDto.phoneNumber(),
                 userDto.password(),
                 userDto.role());
+
+        emailService.sendRegisterConfirmationEmail(userDto);
 
         return ResponseEntity.ok().build();
     }
