@@ -48,6 +48,7 @@
               <router-link to="/user/profil">Profil</router-link>
               <router-link to="/user/samochody">Samochody</router-link>
               <router-link to="/user/rezerwacje">Rezerwacje</router-link>
+              <router-link to="/user/kalendarz">Kalendarz</router-link>
               <router-link to="" @click="logout()">Wyloguj</router-link>
             </div>
           </li>
@@ -106,7 +107,8 @@ export default {
           children: [
             { id: 'profile', name: 'Profil', url: '/' },
             { id: 'orders', name: 'Rezerwacje', url: '/user/rezerwacje' },
-            { id: 'cars', name: 'Samochody', url: '/user/cars' }
+            { id: 'cars', name: 'Samochody', url: '/user/cars' },
+            { id: 'calendar', name: 'Kalendarz', url: '/user/kalendarz' }
             // { id: 'logout', name: 'Wyloguj', url: '/' },
           ]
         }

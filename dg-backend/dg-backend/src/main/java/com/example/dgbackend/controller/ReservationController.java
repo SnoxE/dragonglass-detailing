@@ -49,4 +49,11 @@ public class ReservationController {
     return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("{userId}/delete-reservation/{reservationId}")
+    public ResponseEntity<ResponseDto> deleteReservation(
+            @PathVariable("userId") String userId,
+            @PathVariable("reservationId") String reservationId) {
+        reservationService.deleteReservation(Integer.parseInt(userId), Integer.parseInt(reservationId));
+        return ResponseEntity.ok().build();
+    }
 }

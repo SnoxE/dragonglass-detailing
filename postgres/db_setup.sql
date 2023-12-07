@@ -69,7 +69,8 @@ create table reservations(
   user_id integer NOT NULL references users(id) ,
   service_id integer NOT NULL references services(id),
   car_id integer NOT NULL references cars(id),
-  reservation_term date  NOT NULL
+  start_at timestamp NOT NULL,
+  end_at timestamp NOT NULL
 );
 
 insert into users (first_name, email, password) values ('snoxe', 'snoxe@gmail.com', 'password')

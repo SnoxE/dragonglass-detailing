@@ -52,6 +52,10 @@ public class ReservationService {
         return addReservationSqlService.createReservation(userId, serviceId, carId, startDateTime, endDateTime);
     }
 
+    public void deleteReservation(int userId, int reservationId) {
+        reservationSqlService.deleteReservation(userId, reservationId);
+    }
+
     public ContentDto<ReservationDto> getUserReservations(String userId) {
         List<ReservationDto> reservationDtoList = reservationSqlService.getReservations(userId)
                 .stream().map(ReservationService::reservationDtoMapper).toList();

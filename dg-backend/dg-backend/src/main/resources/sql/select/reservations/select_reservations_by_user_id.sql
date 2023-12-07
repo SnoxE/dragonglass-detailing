@@ -13,5 +13,7 @@ FROM
 	JOIN services AS s ON r.service_id = s.id
 	JOIN cars AS c ON r.car_id = c.id
 WHERE
-    r.user_id = ?;
+    r.user_id = ?
+ORDER BY
+    r.start_at DESC;
 

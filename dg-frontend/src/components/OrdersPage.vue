@@ -52,19 +52,12 @@
           <div class="">
             <button
               class="m-4 rounded-lg border border-transparent px-4 py-2 font-medium hover:border hover:border-mcl-orange"
+              @click="deleteReservation(order.res_id)"
             >
               Anuluj
             </button>
           </div>
         </div>
-      </div>
-      <div class="">
-        <button
-          class="m-4 rounded-lg border border-transparent px-4 py-2 font-medium text-white hover:border hover:border-mcl-orange"
-          @click="fetchUserCars"
-        >
-          Fetch cars
-        </button>
       </div>
     </div>
   </div>
@@ -121,6 +114,15 @@ export default {
       const time = `${hours}:${minutes}`
 
       return { date, time }
+    },
+    async deleteReservation(res_id) {
+      const response = await axios.delete(
+        '/api/reservations/' + this.userId + '/delete-reservation/' + res_id
+      )
+      if (response.status == 200) {
+        this.orderList.length = 0
+        await this.fetchOrders()
+      }
     }
   }
 }

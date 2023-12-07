@@ -1,10 +1,13 @@
 package com.example.dgbackend.database.reservations.sql;
 
+import com.example.dgbackend.common.exceptions.DgAuthException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +25,8 @@ public class ReservationSqlService {
             readSqlQuery("sql/select/reservations/select_reservations_by_user_id.sql");
     public static final String SELECT_RESERVATIONS =
             readSqlQuery("sql/select/reservations/select_reservations.sql");
+    public static final String DELETE_RESERVATION_BY_ID_AND_USER_ID =
+            readSqlQuery("sql/delete/delete_reservation_by_id_and_user_id.sql");
 
     JdbcOperations jdbcOperations;
 
@@ -62,6 +67,18 @@ public class ReservationSqlService {
                 });
     }
 
+    public void deleteReservation(
+            int userId,
+            int reservationId) throws DgAuthException {
+        try {
+            jdbcOperations.update(con -> preparedDeleteReservationByIaAndUserIdStatement(con,
+                    userId,
+                    reservationId));
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     private PreparedStatement preparedSelectReservationByUserIdQuery(
             Connection connection,
             String userId) throws SQLException {
@@ -69,6 +86,19 @@ public class ReservationSqlService {
 
         int parameterIndex = 0;
         statement.setInt(++parameterIndex, Integer.parseInt(userId));
+
+        return statement;
+    }
+
+    private PreparedStatement preparedDeleteReservationByIaAndUserIdStatement(
+            Connection connection,
+            int userId,
+            int reservationId) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(DELETE_RESERVATION_BY_ID_AND_USER_ID);
+
+        int parameterIndex = 0;
+        statement.setInt(++parameterIndex, userId);
+        statement.setInt(++parameterIndex, reservationId);
 
         return statement;
     }

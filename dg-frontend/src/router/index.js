@@ -9,6 +9,7 @@ import ReserveView from '@/views/ReserveView.vue'
 import CarsView from '@/views/CarsView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import AddCarView from '@/views/AddCarView.vue'
+import CalendarView from '@/views/CalendarView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const routes = [
@@ -56,6 +57,11 @@ const routes = [
     path: '/user/dodaj-samochod',
     name: 'addCar',
     component: AddCarView
+  },
+  {
+    path: '/user/kalendarz',
+    name: 'calandar',
+    component: CalendarView
   }
 ]
 
