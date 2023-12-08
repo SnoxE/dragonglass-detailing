@@ -1,6 +1,6 @@
 <template>
   <div class="bg-dark-mode-gray p-10">
-    <ThreeJsAnimation />
+    <ThreeJsAnimation></ThreeJsAnimation>
     <div class="mx-auto flex max-w-screen-xl flex-wrap">
       <h1 class="border-b-2 pb-1 text-4xl font-medium text-white">O NAS</h1>
       <div class="mx-auto flex justify-center gap-10">

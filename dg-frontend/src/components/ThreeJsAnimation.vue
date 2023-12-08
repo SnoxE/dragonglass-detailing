@@ -1,6 +1,6 @@
 <template>
-  <div ref="container" class="three-container relative mb-10 w-full" style="padding-top: 56.25%">
-    <canvas ref="glCanvas" class="glcanvas absolute left-0 top-0 h-full w-full"></canvas>
+  <div ref="container" class="three-container mx-auto mb-10 max-w-screen-xl">
+    <canvas ref="glCanvas" class="glcanvas left-0 top-0 h-full w-full"></canvas>
   </div>
 </template>
 
@@ -44,23 +44,16 @@ export default {
         }
       )
 
-      // const geometry = new THREE.SphereGeometry(2, 64, 64)
-      // const material = new THREE.MeshStandardMaterial({
-      //   color: '#ff6d01'
-      // })
-
-      // const mesh = new THREE.Mesh(geometry, material)
-      // this.scene.add(mesh)
-
       const light = new THREE.PointLight(0xffffff, 400, 100)
       light.position.set(0, 10, 10)
       this.scene.add(light)
 
       const width = this.$refs.container.clientWidth
-      const height = this.$refs.container.clientHeight
+      const height = this.$refs.container.clientHeight * 0.8
 
       this.camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100)
       this.camera.position.z = 15
+      this.camera.position.y = 5
       this.scene.add(this.camera)
 
       const canvas = this.$refs.glCanvas
@@ -69,7 +62,6 @@ export default {
       this.renderer.setPixelRatio(2)
       this.renderer.setClearColor(0x121212)
 
-      console.log(this.renderer.domElement)
       this.controls = new OrbitControls(this.camera, this.renderer.domElement)
       this.controls.enableZoom = false
       this.controls.enableDamping = true
