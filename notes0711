@@ -1,0 +1,41 @@
+car size column
+lista termniow rezerwacji zeby nie odpytywac bazy/raz pod koniec dnia/przy dodaniu rezerwacji
+potwierdzenie rezerwacji
+tavle rezerwacji: id, userid, carid, employeeid?, 
+overleaf docs/dodac template/dodac gawron@agh.edu.pl
+
+motywacja - co? dlaczego? bez inwokacji w dzisiejszcyh czasach, lista featureow
+streszczenie pracy (rozdzial pierwszy mowi o..., drugi o ...)
+- te rzeczy pozniej
+
+technologie - java v17, spring boot 3, ktore dependencje i wersje, co do czego sluzy, 
+vuejs, postgres itp itd
+
+implementacja - endpointy, kod do nich, jak to jest ze dzialaja, baza i jej tabele i skrypty
+
+podrecznik uzytkownika/dzialanie apki, screeeny itp itd, dzialanie aplikacji
+
+testy, som
+
+podsumowanie, co sie udalo, oc mozna by zrobic na przyszlosc
+
+bibliografia
+- linki nie do iwkipedii tylko do rzeczywistych stron
+
+"W tym rozdzialem opowiem o.../"
+widok dla pracownika - moze byc 1
+
+
+
+######
+
+anuluj lub zmien rezerwacje
+18-22.12 ma byc gotowa reszta tekstu
+zrobic overleafa
+
+rejestracja
+rezerwacja
+<!-- powiadomienia -->
+filtorowanie rezerwacji front
+profil front
+
