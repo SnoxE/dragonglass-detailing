@@ -7,5 +7,6 @@ SELECT
 FROM
     services AS s
 WHERE
-	s.name = ?
-	AND s.car_size = ?::car_size;
+    s.name = ?
+    AND s.car_size = ?::car_size;
+

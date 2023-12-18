@@ -7,5 +7,5 @@ SELECT
 FROM
     services AS s
 WHERE
-	s.name = ?;
+    s.name = ?;
 

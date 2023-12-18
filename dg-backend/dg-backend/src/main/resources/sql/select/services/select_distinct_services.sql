@@ -1,5 +1,5 @@
 SELECT DISTINCT
-    s.name as name
+    s.name AS name
 FROM
     services AS s;
 
