@@ -76,7 +76,9 @@ public class SecurityConfig {
                     "/api/token",
                             "/api/users/register",
                             "/api/users/email",
-                            "/api/services/**")
+                            "/api/services/**",
+                            "/swagger-ui/**",
+                            "/v3/**")
                     .permitAll().anyRequest().authenticated())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults()))

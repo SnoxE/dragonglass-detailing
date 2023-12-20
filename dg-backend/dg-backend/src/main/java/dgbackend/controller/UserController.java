@@ -101,7 +101,7 @@ public class UserController {
         return carService.getUserCars(userId);
     }
 
-    @DeleteMapping("{userId}/delete-car/{carId}")
+    @DeleteMapping("/{userId}/delete-car/{carId}")
     public ResponseEntity<ResponseDto> deleteCar(
             @PathVariable("userId") String userId,
             @PathVariable("carId") String carId) {

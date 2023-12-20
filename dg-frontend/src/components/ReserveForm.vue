@@ -173,6 +173,7 @@ export default {
 
       if (response.status == 200) {
         this.reservationSuccessful = true
+        await this.getAvailableTimes()
       }
     }
   }

@@ -14,8 +14,6 @@ public class EmailService {
     public static final String EMAIL_ADDRESS = "dragonglassdetailing@gmail.com";
     public static final String COMPANY_NAME = "Dragonglass Detailing";
     public static final String REGISTER_SUBJECT = "Witaj w Dragonglass Detailing";
-    public static final String RESERVATION_CONFIRMATION_SUBJECT = "Twoja rezerwacja została przyjęta";
-
 
     public void sendRegisterConfirmationEmail(UserDto userDto) {
 
