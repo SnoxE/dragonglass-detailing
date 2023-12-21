@@ -1,0 +1,636 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=3.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+% \usepackage{inconsolata}
+\usepackage{color}
+\usepackage{float}
+\usepackage{forest}
+\usepackage{dirtree}
+
+\hypersetup{hidelinks}
+
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
+\definecolor{commentColour}{rgb}{0,0.5,0}
+\definecolor{stringColour}{rgb}{0,0.5,0}
+\definecolor{keywordColour}{HTML}{9e028a}
+\definecolor{numberColour}{rgb}{0.5,0.5,0.5}
+\definecolor{mcl-orange}{RGB}{255, 111, 1}
+\definecolor{gulf-teal}{RGB}{149, 186, 191}
+
+\lstdefinestyle{myIntellijStyle}{
+    commentstyle=\color{commentColour},
+    keywordstyle=\color{keywordColour},
+    numberstyle=\tiny\color{numberColour},
+    stringstyle=\color{stringColour},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=Java
+}
+
+%% ########################################################
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+\includegraphics[width=0.3\columnwidth]{jpg/logo_AGH.jpg}\\
+\bf{\sf{WYDZIAŁ FIZYKI I INFORMATYKI STOSOWANEJ}}\\[5mm]
+%% ======================================================
+\bf{\sf{KATEDRA INFORMATYKI STOSOWANEJ I FIZYKI KOMPUTEROWEJ}}\\[14mm]
+%% KATEDRA FIZYKI CIAŁA STAŁEGO
+%% KATEDRA FIZYKI MATERII Skondensowanej
+%% KATEDRA FIZYKI MEDYCZNEJ I BIOFIZYKI
+%% KATEDRA INFORMATYKI STOSOWANEJ I FIZYKI KOMPUTEROWEJ
+%% KATEDRA ODDZIAŁYWAŃ I DETEKCJI CZĄSTEK
+%% KATEDRA ZASTOSOWAŃ FIZYKI JĄDROWEJ
+%% ======================================================
+\sf{\huge Projekt dyplomowy}\\[12mm] 
+%% Projekt dyplomowy = inżynierska
+%% Praca dyplomowa = magisterska
+%% ======================================================
+\sf{\Large Aplikacja internetowa dla studia detailingowego \\[2mm] %% Niepotrzebne usunąć
+Web application for car detailing studio %% Jeżeli praca została napisana w języku innym niż język angielski
+%% ======================================================
+%% W przypadku pracy napisanej
+%% - po polsku: dwa tytuły,
+%% - po angielsku: dwa tytuły,
+%% - po hiszpańsku/niemiecku/etc: trzy tytuły.
+%% ======================================================
+}\\[40mm]
+\end{center}
+\sf{
+\begin{tabular}{ll}
+Autor: & Szymon Mateusz Moździerz\\
+Kierunek studiów: &	Informatyka Stosowana\\
+%% Fizyka Techniczna
+%% Fizyka Medyczna
+%% Informatyka Stosowana, etc
+Opiekun pracy: & dr hab. inż.
+ Przemysław Gawroński, prof. AGH\\
+\end{tabular}
+}\\[10mm]
+\begin{center}
+\sf{Kraków, 2024}
+\end{center}
+
+%% ########################################################
+\newpage
+\tableofcontents
+
+\newpage
+\section{Wykorzystane technologie}
+
+\subsection{Java}
+\textbf{Java} \cite{java} - wysokopoziomowy, obiektowo zorientowany i opierający się na klasach język programowania. Wiele swoich cech dzieli zarówno z C jak i C++, jednak jest szereg aspektów, które zostały pominięte względem wspomnianych języków. Java jest językiem, który jest niezależny od architektury, ponieważ kod źródłowy jest kompilowany do postaci kodu pośredniego, który z kolei jest interpretowany przez JVM (Java Virtual Machine), zainstalowaną w systemie. W projekcie wykorzystana została Java 19, która usprawniła korzystanie z rekordów, będących nieocenioną pomocą przy tworzeniu obiektów transferu danych.
+
+\subsection{Maven}
+\textbf{Maven} \cite{maven} - narzędzie umożliwiające automatyzację budowania aplikacji głównie dla platformy Java. Działa ono na zasadzie umieszczania pożądanych zależności w pliku \textsl{pom.xml} (POM, ang. \textsl{Project Object Model}). Dependencje są automatycznie pobierane przy pierwszym wykorzystaniu. Stanowi to ułatwienie zarządzania wykorzystywanymi bibliotekami oraz zależnościami oraz ich wersjami.
+
+\subsection{Java Spring}
+\textbf{Java Spring} \cite{spring} - jeden z najpopularniejszych frameworków do tworzenia aplikacji Java.
+Zapewnia złożony model programistyczny i konfiguracyjny, niezależnie od wybranej platformy wdrożeniowej. Jego najważniejsze cechy to:
+
+\begin{itemize}
+    \item \textbf{Inwersja kontroli} (ang. \textsl{Inversion of Control - IoC}) \cite{ioc} - wzorzec projektowy wywodzący się z historii architektury oprogramowania. W przeciwieństwie do programowania proceduralnego, gdzie to napisany przez programistę kod wywoływał biblioteki wielokrotnego użytku, po odwróceniu kontroli, to framework wywołuje napisany przez programistę kod. Szerzej wykorzystywany od czasu popularyzacji aplikacji wykorzystujących interfejs graficzny (\textsl{GUI})
+
+    \item \textbf{Wstrzykiwanie zależności} (ang. \textsl{Dependency Injection - DI}) \cite{dependency-injection} - proces stanowiący o tym, że obiekty same definiują swoje zależności. Dzieje się to jedynie przez argumenty konstruktora lub argumenty wywołania metody fabrykującej (ang. \textsl{factory method}). Pozwala to kontenerowi IoC na wstrzyknięcie tych zależności w czasie tworzenia Beana\footnote{\textsl{Bean} - obiekt zarządzany przez kontekst Spring}.
+
+    \item \textbf{Kontener IoC} (ang. \textsl{IoC Container}) \cite{ioc-container} - interfejs odpowiedzialny za konfigurowanie i budowanie Bean'ów. Poprzez odczyt metadanych konfiguracyjnych, sprawdza jakie instancje obiektów powinny zostać stworzone i skonfigurowane. Do jego zadań należy również zarządzanie cyklem życia obiektów.
+\end{itemize}
+
+\noindent
+Przy tworzeniu aplikacji użyty został Spring Framework v6.0.13.
+
+\subsection{Spring Boot}
+\textbf{Spring Boot} \cite{spring-boot} - dodatek do frameworku Spring, pozwalający na szybkie stworzenie aplikacji, którą można "po prostu uruchomić". Wystarczy dodać adnotację \textcolor{keywordColour}{@SpringBootApplication} w głownej klasie aplikacji, nad metodą \lstinline{main}. Zapewnia on automatyczną konfigurację platformy Spring oraz innych zależności obecnych w aplikacji, gdzie tylko jest to możliwe, którą można w każdej chwili zmienić minimalnym nakładem sił. Wykorzystany został Spring Boot v3.1.5
+
+\subsection{Spring Web MVC}
+\textbf{Spring Web MVC} \cite{spring-web} - poprzez wykorzystanie wbudowanego Tomcata oraz modułu \textsl{spring-boot-starter-web} tworzy samowystarczalny serwer HTTP. Pozwala na tworzenie specjalnych Beanów \textcolor{keywordColour}{@Controller} lub \textcolor{keywordColour}{@RestController}, które odpowiedzialne są odbieranie żądań HTTP. Metody takiego kontrolera mapowane są do odpowiednich endpointów\footnote{Endpoint - stanowi bramę, która pozwala innym serwisom na komunikację z serwerem \cite{endpoint}}, za pomocą adnotacji \textcolor{keywordColour}{@RequestMapping}
+
+\subsection{OAuth2 Resource Server}
+\textbf{OAuth2 Resource Server} \cite{oauth2} - integracja modułu Spring Security OAuth dla Spring Boot'a. Pozwala na uwierzytelnianie oraz autoryzację użytkownika z wykorzystaniem frameworku OAuth 2. Dostęp nadawany jest na podstawie zwracanego, po poprawnym potwierdzeniu tożsamości użytkownika, tokenu JWT\footnote{JWT (ang. \textsl{JSON Web Token}) - otwarty standard (\textsl{RFC 7519}), definiujący samowystarczalny sposób przekazywania informacji między stronami za pomocą obiektu JSON. Informacje mogą być sprawdzone, ponieważ są podpisane cyfrowo przy użyciu sekretu lub pary kluczy RSA \cite{jwt}}, który następnie musi być dołączony do każdego wysyłanego zapytania HTTP. Wykorzystano wersję v3.1.5.
+
+\subsection{Spring Devtools}
+\textbf{Spring Devtools} \cite{spring-devtools} - zestaw narzędzi mających na celu usprawnienie rozwoju projektu. Zapewnia takie udogodnienia jak szybkie restarty aplikacji czy LiveReload, czyli automatyczne przeładowanie aplikacji po zapisaniu zmian w którymkolwiek ze śledzonych plików. Wykorzystano wersję v3.1.5.
+
+\subsection{PostgreSQL}
+\textbf{PostgreSQL} \cite{postgresql} - system zarządzania obiektowo-relacyjnymi bazami danych o charakterze otwartego oprogramowania (ang. \textsl{open source}). Wykorzystuje i rozszerza możliwości języka zapytań SQL (ang. \textsl{Structured Query Language} \cite{sql}). Zapewnia wiele funkcjonalności oraz pozwalających na bezpieczne przechowywanie oraz skalowanie nawet najbardziej skomplikowanych modeli danych.
+
+\subsection{PostgreSQL JDBC Driver}
+\textbf{PostgreSQL JDBC Driver} \cite{postgres-driver} - interfejs JDBC, który pozwala aplikacji Java na połączenie z relacyjną bazą danych PostgreSQL przy użyciu standardowego, niezależnego kodu Java. Wykorzystano wersję v42.6.0.
+
+\subsection{Spring Boot Starter JDBC}
+\textbf{Spring Boot Starter JDBC} \cite{spring-boot-jdbc} - pakiet startowy dla frameworku Spring Boot pozwalający na używanie interfejsu JDBC wraz z pulą połączeń HikariCP (Hikari Connection Pool)\footnote{Pula połączeń - koncept polegający na ciągłym utrzymywaniu kilku otwartych w specjalnym kontenerze połączeń do bazy danych, pozwala to na oszczędzenie dużej ilości zasobów}. Wykorzystano wersję v3.1.5.
+
+\subsection{Spring Boot Starter Mail}
+\textbf{Spring Boot Starter Mail} \cite{spring-boot-mail} - zależność frameworku Spring Boot pozwalająca na bardzo łatwe przygotowanie oraz wysyłanie wiadomości email przy minimalnej konfiguracji. Do wysłania wiadomości wykorzystany został interfejs \textsl{JavaMailSender}, a do przygotowania klasa \textsl{SimpleMailMessage}. Wykorzystano wersję v3.1.5.
+
+\subsection{Spring Boot Maven Plugin}
+\textbf{Spring Boot Maven Plugin} \cite{spring-boot-maven} - wtyczka zapewniająca wsparcie dla Apache Maven. Pozwala na pakowanie wykonywalnych archiwów jar lub war, uruchamianie aplikacji Spring Boot oraz generowanie informacji o kompilacji.
+
+\subsection{HTML}
+\textbf{HTML} (ang. \textsl{HyperText Markup Language}) \cite{html} - pierwotnie powstał jako język wykorzystywany do semantycznego opisywania dokumentów naukowych. Jego ogólna konstrukcja pozwoliła, na przestrzeni lat, na jego dostosowanie i zaadaptowanie jako język do opisu wielu innych typów dokumentów czy nawet aplikacji. Aktualnie jest to główny język znacznikowy używany do tworzenia dokumentów przeznaczonych do wyświetlania w przeglądarce internetowej. Docelowy wygląd dokumentu uzyskuje się poprzez wykorzystanie wcześniej wspomnianych znaczników, które specyfikują typ zawartości i jej układ. Użyta i zarazem najnowsza wersja to HTML 5.1, której standard zdefiniowany jest przez ogranizację \textsl{W3C} (ang. \textsl{World Wide Web Consortium})
+
+\subsection{CSS}
+\textbf{CSS} (ang. \textsl{Cascading Style Sheets}) \cite{css} - Stworzone przez organizację W3C w roku 1996. Używane do opisu formy prezentacji dokumentów HTML lub XML. Określają w jaki sposób elementy powinny być wyrenderowane. 
+
+\subsection{Tailwind CSS}
+\textbf{Tailwind CSS} \cite{tailwindcss} - framework do języka CSS o podejściu utility-first\footnote{utility-first - metodologia CSS, w którym style budowane są przy użyciu wielu małych klas używanych w określonym celu \cite{utility-first}}. Jest to potężny zbiór klas nadających styl elementom HTML. Każda odpowiedzialna jest za tylko jedną rzecz np. użycie klasy \textsl{flex} na komponencie powoduje dodanie do niego elementu \textsl{display: flex}. Takie podejście ma wiele zalet:
+\begin{itemize}
+    \item zapewnia spójną konwencję nazw
+    \item ogranicza kod, który programista inaczej musiałby napisać samemu, co znacznie przyspiesza pracę
+    \item automatycznie wybiera tylko te style, które są rzeczywiście używane
+\end{itemize}
+
+\noindent
+Framework ten można również wesprzeć wtyczką \textsl{prettier-plugin-tailwindcss} do Visual Studio Code, która będzie automatycznie sortować klasy zgodnie z rekomendowaną przez Tailwinda kolejnością, aby jeszcze bardziej uprościć proces stylowania \cite{prettier-plugin-tailwindcss}.
+
+\subsection{JavaScript}
+\textbf{JavaScript} (JS) \cite{javascript} - wysokopoziomowy, wielo-paradygmatowy, interpretowany w czasie rzeczywistym, język programowania, z funkcjami typu first-class\footnote{first-class - o funkcji można powiedzieć, że jest typu first-class, kiedy jest traktowana jak każda inna zmienna. Taka funkcja może być przekazywana do innej jako argument, zwracana przez inne funkcje lub przypisana do zmiennej jako wartość \cite{first-class}.} oraz wspierający obiektowo zorientowane czy deklaratywne (funkcyjne) style programowania. Pozwala on na dynamiczną zmianę zawartości DOM (and. \textsl{Document Object Model}), walidację formularzy czy wyświetlanie animacji. \\
+\\\noindent
+Tworzeniem specyfikacji języka JavaScript zajmuje się komisja \textsl{TC39} \cite{tc39}, a za najważniejszą w historii języka uznawana jest ta z 2015 roku, nosząca nazwę ECMAScript 6 (ES6). 
+Przyniosła ona wiele znaczących zmian, w tym zmianę koncepcji nazewnictwa i tym samym przemianowanie \textsl{ES6} na \textsl{ES2015}. Najnowsza specyfikacja to \textsl{ES2023} \cite{es2023}.
+
+\subsection{Vue.js}
+\textbf{Vue.js} \cite{vuejs} - framework do języka JavaScript przeznaczony do budowania interfejsu użytkownika, który budowany ponad standardowymi HTML, CSS i JavaScriptem. Zapewnia deklaratywny model programowania polegający na budowaniu generycznych komponentów, które można wielokrotnie wykorzystywać w celu zmniejszenia nakładu pracy oraz ilości powtarzającego się kodu w myśl zasady \textbf{DRY} (ang. \textsl{Don't Repeat Yourself}) \cite{dry-principle}. Dwie kluczowe funkcjonalności frameworku Vue to: 
+\begin{itemize}
+    \item \textbf{Renderowanie deklaratywne} (ang. \textsl{Declarative Rendering}) - Vue rozszerza standardowy HTML, co umożliwia deklaratywny opis wyjściowego dokumentu HTML w zależności od stanu JavaScript
+    \item \textbf{Reaktywność} (ang. \textsl{Reactivity}) - Vue automatycznie śledzi zmiany stanu JavaScript i efektywnie odświeża DOM po wystąpieniu zmian
+\end{itemize}
+
+\noindent
+W większości projektów, komponenty Vue tworzone są w formacie podobnym do HTML nazywanymi Single-File Component \cite{vue-sfc} (pliki \textsl{*.vue}, w skrócie \textbf{SFC}). W Vue SFC zgodnie z tym co sugeruje nazwa, cała logika komponentu (JavaScript), szablon (HTML) oraz stylowanie (CSS), zamknięte są w jednym pliku.\\
+\\\noindent
+W aplikacji wykorzystano Vue 3.
+
+\subsection{Three.js}
+\textbf{Three.js} \cite{three} - silnik oparty na technologii OpenGL, do języka JavaScript, który jest w stanie uruchamiać gry i inne aplikacje graficzne, bezpośrednio z poziomu przeglądarki. Bibilioteka ta udostępnia wiele funkcjonalności oraz API\footnote{API (ang. \textsl{Application Programming Interface - interfejs programowania aplikacji, stanowi interfejs komunikacjyjny dla dwóch lub większej ilości programów komputerowych, z wykorzystaniem określonego zbioru definicji i protokołów \cite{api}})} umożliwiające rysowanie i wyświetlanie scen 3D w przeglądarce.
+
+\subsection{SpringDoc OpenAPI Starter WebMVC UI}
+\textbf{SpringDoc OpenAPI Starter WebMVC UI\cite{springdoc}} - biblioteka dla języka Java pomagająca w automatyzacji generowania dokumentacji dla API projektów Spring Boot. Zależność ta jest dodatkowo wsparta swagger-ui, dzięki czemu dokumentacja jest przedstawiona w odpowiednio stylowanym formacie HTML. Została wykorzystana wersja v2.3.0.
+
+\newpage
+\section{Struktura aplikacji}
+\subsection{Baza danych}
+
+Dane potrzebne do działania aplikacji przechowywane są w bazie PostgreSQL. 
+Jej struktura przedstawiona jest na \textsl{Rys. 1}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{jpg/erd.jpg}
+\caption{Diagram ERD wykorzystanej bazy danych}
+\end{figure}
+
+\noindent
+Model bazy składa się z 4 tabel: 
+\begin{itemize}
+    \item \textsl{services} - tabela, w której przechowywane są informacje statyczne, dane o dostępnych typach usług, ich cenach oraz długościach trwania w zależności od wielkości samochodu
+    \item \textsl{users} - tabela przechowująca dane informacyjne o użytkownikach, takie jak imię, nazwisko czy numer telefonu, a także używane w procesie uwierzytelniania oraz autoryzacji pola email, hasło i rola, która definiuje, do których funkcjonalności dany użytkownik będzie miał dostęp
+    \item \textsl{cars} - tabela, która przechowuje wszystkie posiadane przez użytkowników samochody wraz z informacjami je identyfikującymi
+    \item \textsl{reservations} - zasadniczo najważniejsza tabela w całej bazie. Przedstawia ona dane dotyczące dokonanych w serwisie rezerwacji. Połączona jest ona ze wszystkimi pozostałymi tabelami w taki sposób, aby można było później zebrać wszystkie informacje na temat konkretnego zamówienia
+\end{itemize}
+
+\subsection{Struktura Backendu}
+            Backend projektu został napisany w języka Java w połączeniu z frameworkiem Spring Boot. Jego struktura została zainspirowana modelem MVC, jednak przypomina ona bardziej model MVCS (ang. \textsl{Model View Controller Service}), z wydzieloną dodatkowo warstwą serwisową odpowiedzialną za konwersję danych otrzymanych z bazy w warstwie modelu do formy DTO\footnote{DTO - (ang. \textsl{Data Transfer Object}) obiekt transferu danych wykorzystywany do opakowania danych i wysłania ich z jednego podsystemu aplikacji do drugiego \cite{dto}}, gotowej do zwrócenia przez kontroler. \\
+
+\dirtree{%
+.1 dg-backend/.
+.2 src/.
+.3 main/.
+.4 java/.
+.5 dgbackend/.
+.6 common/.
+.6 config/.
+.6 controller/.
+.6 database/.
+.6 model/.
+.6 service/.
+.4 resources/.
+.5 certs/.
+.5 sql/.
+.3 test/.
+.2 .gitignore.
+.2 pom.xml.
+}
+
+\subsubsection{\textsl{dg-backend/}}
+Główny folder backendu projektu. Zawiera plik \textsl{.gitignore}, określający pliki, które nie będą wersjonowane przy pomocy narzędzia \textsl{git}. W pliku \textsl{pom.xml} znajdują się informacje o wszystkich wykorzystywanych zależnościach w projekcie, a także o ich wersjach.
+
+\subsubsection{\textsl{common/}}
+Folder zawierający kod i komponenty specjalnie przygotowane i wykorzystywane w wielu różnych miejscach, w myśl zasady \textsl{Don't Repeat Yourself} (DRY).
+
+\subsubsection{\textsl{config/}}
+Zawiera klasy konfiguracyjne projektu. Zawarta jest w nich logika generowania tokenu JWT i ograniczania dostępu do poszczególnych endpointów tym, którzy takiego tokenu nie posiadają. Dodatkowo to w tym miejscu znajduje się konfiguracja \textsl{CORS}\footnote{CORS (ang. \textsl{Cross-Origin Resource Sharing}) - mechanizm bazujący na nagłówkach HTTP, określający z jakiego adresu może pochodzić żądanie, żeby zostać przetworzone \cite{cors}}.
+
+\subsubsection{\textsl{controller/}}
+Katalog zawierający klasy oznaczone adnotacją \textcolor{keywordColour}{@RestController}. To w nich zdefiniowane są odpowiednie endpointy wywołujące odpowiednie funkcje z katalogu \textsl{services/}. Na sam koniec operacji to również kontroler wysyła pozyskane dane do klienta.
+
+\subsubsection{\textsl{database/}}
+Zawiera warstwę modelu aplikacji. Zdefiniowane są tutaj odpowiednie DAO\footnote{DAO (ang. \textsl{Data Access Object}) - obiekt służący jako kontener na dane pobierane bezpośrednio z bazy danych \cite{dao}}
+, a także klasy typu \textsl{Repository Pattern}\footnote{Repository Pattern - wzorzec repozytorium, interfejs lub klasa, w której zdefiniowane są metody dostępu do bazy danych oraz operacje CRUD wykorzystujące DAOs \cite{repository-pattern}}.
+
+\subsubsection{\textsl{model/}}
+Pakiet zawierający 2 rekordy\footnote{Java Record Keyword - słowo kluczowe wprowadzone wraz ze standardem Java 14 dla uproszczenia obsługi niezmiennych danych oraz odciążenie programisty z potrzeby definiowania podstawowych metod jak: \textsl{get(), set()} czy \textsl{equals()} \cite{java-record-keyword}}:
+\begin{itemize}
+    \item LoginMessage - jest to DTO, które w przypadku pomyślnego uwierzytelnienia, użytkownik po zalogowaniu otrzymuje w odpowiedzi, ważny przez 1h, token JWT pozwalający mu na dostęp do funkcjonalności aplikacji wymagających autoryzacji
+    
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{jpg/LoginMessage.jpg}
+    \caption{Zawartość rekordu LoginMessage}
+    \end{figure}
+    
+    \item LoginRequest - DTO wykorzystywane jako ciało żądania wysyłane podczas operacji logowania
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{jpg/LoginRequest.jpg}
+    \caption{Zawartość rekordu LoginRequest}
+    \end{figure}
+\end{itemize}
+
+\subsubsection{\textsl{service/}}
+Folder z wszystkimi serwisami obecnymi w aplikacji. Każdy z serwisów posiada zdefiniowane metody, które pobierają dane z bazy korzystając z metod zdefiniowanych w repozytorium, następnie, w razie potrzeby, są odpowiednio przetwarzane, a na koniec mapowane z DAO na DTO i zwracane do kontrolera.
+
+\subsection{Struktura Frontendu}
+
+Frontend projektu został napisany w Vue 3, które jest frameworkiem do języka JavaScript.\\
+
+\dirtree{%
+.1 dg-frontend/.
+.2 .vscode/.
+.2 node\_modules/.
+.2 public/.
+.3 animation/.
+.2 src/.
+.3 assets/.
+.3 components/.
+.3 router/.
+.3 stores/.
+.3 views/.
+.3 App.vue.
+.3 authStatus.js.
+.3 axios.js.
+.3 index.css.
+.3 main.js.
+.2 eslintrc.cjs./.
+.2 .gitignore./.
+.2 .prettierc.json.
+.2 index.html.
+.2 package-lock.json.
+.2 package.json.
+.2 postcss.config.js.
+.2 prettierc.
+.2 README.md.
+.2 tailwind.config.js.
+.2 vite.config.js.
+.2 vitest.config.js.
+}
+
+\subsubsection{\textsl{node\_modules/}}
+Folder tworzony przy pierwszym użyciu polecenia \textsl{npm install}\footnote{npm - nawjwiększa na świecie biblioteka z pakietami kodów lub ang. \textsl{Node Package Manager}, czyli menedżer do zarządzania i instalacji wspomnianych pakietów}. To do niego są pobierane wszystkie pakiety projektu wyszczególnione w pliku \textsl{package.json}.
+
+\subsubsection{\textsl{public/}}
+Folder, w którym umieszczone są tekstury wykorzystywane w animacji na stronie głównej aplikacji.
+
+\subsubsection{\textsl{src/assets/}}
+Folder zawierający grafiki umieszczone w aplikacji, a także plik \textsl{favicon.ico}, który jest wyświetlany np. jako ikona aplikacji wyświetlana obok tytułu karty.
+
+\subsubsection{\textsl{src/components/}}
+W tym folderze znajdują się wszystkie wykorzystane w aplikacji, możliwe do ponownego wykorzystania komponenty.s
+
+\subsubsection{\textsl{src/router/}}
+Znajduje się tu plik konfiguracyjny do, w którym zdefiniowane są ścieżki dostępne na frontendzie aplikacji.
+
+\subsubsection{\textsl{src/stores/}}
+Zawiera plik z definicją \textsl{pinia\footnote{Pinia - biblioteka dla Vue pozwalająca na udostępnianie stanu aplikacji pomiędzy różnymi komponentami \cite{pinia}} store}, czyli \,\,magazynu\'\', który tym przypadku odpowiedzialny jest za sprawdzanie stanu zalogowania użytkownika.
+
+\subsubsection{\textsl{src/views/}}
+Umieszczone zostały tutaj wszystkie widoki dostępne w aplikacji, odpowiadające ścieżkom zdefiniowanym w pliku konfiguracyjnym routera. 
+
+\subsubsection{\textsl{src/main.js}}
+Plik ze skryptem budującym aplikację. Jest on uruchamiany w ciele dokumentu w pliku \textsl{index.html}.
+
+\newpage
+\section{Implementacja}
+    
+\subsection{Backend}
+
+Aplikacja Dragonglass Detailing działa na zasadzie zapisu oraz odczytu danych z dedykowanej bazy danych oraz wyświetlaniu ich w odpowiednim sposób. Proces pobierania danych z bazy, rozpoczyna się po otrzymaniu żądania HTTP, z frontendu, przez kontroler. Warstwa repozytorium pobiera dane za pomocą odpowiedniego zapytania i przekazuje je do warstwy serwisowej, gdzie w razie potrzeby następuje ich przetworzenie, a następnie zmapowanie z formy DAO na DTO i przekazanie do kontrolera, który ostatecznie wysyła je do klienta.
+
+\subsubsection{Dostępne endpointy}
+
+W przypadku REST API komunikacja pomiędzy frontendem i backendem odbywa się poprzez zdefiniowane w tym drugim endpointy, do których następuje odwołanie w przypadku chęci pobrania lub wysłania pewnych danych. Na rysunkach \textsl{4} oraz \textsl{5} znajduje się lista dostępnych w aplikacji punktów końcowych, wygenerowana przy pomocy narzędzia SpringDoc OpenAPI. Po odpowiedniej, krótkiej konfiguracji pod adresem, w przypadku lokalnego serwera, \textsl{http://localhost:8080/swagger-ui/index.html} widnieje dokumentacja wszystkich endpointów, które zostały udostęnione w aplikacji.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/endpoints/user.jpg}
+    \caption{Lista endpointów dostępnych w kontrolerze \textsl{UserController} oraz \textsl{AuthController}}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/endpoints/reservation.jpg}
+    \caption{Lista endpointów dostępnych w kontrolerze \textsl{ReservationController} oraz \textsl{ServicesController}}
+\end{figure}
+
+
+\subsubsection{Konfiguracja \textsl{Spring Security}}
+
+Biblioteka Spring Security zapewnia możliwość korzystania z predefiniowanych ustawień, ale również wiele możliwości konfiguracji aplikacji. Do zmiany ustawień potrzebna jest klasa ze specjalnym adnotacjami: \textcolor{keywordColour}{\textsl{@Configuration}} oraz \textcolor{keywordColour}{\textsl{@EnableWebSecurity}}. Taką rolę pełni w tym przypadku klasa \textsl{SecurityConfig}. Początek jej implementacji wraz z adnotacjami widoczny jest na rysunku \textsl{6}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{jpg/security/Spring Security.jpg}
+    \caption{Definicja klasy odpowiedzialnej za zmianę konfiguracji Spring Security}
+\end{figure}
+
+\noindent
+Klasa ta zawiera również pole \textsl{rsaKeys}, o typie \textsl{RsaKeyProperties}, które jest rekordem o dwóch polach: 
+
+\begin{itemize}
+    \item \textsl{privateKey}
+    \item \textsl{publicKey}
+\end{itemize}
+
+\noindent
+Klucze te wykorzystywane są do enkodowania i dekodowania tokenów JWT.
+
+\newpage
+\noindent
+W klasie tej zostały zdefiniowane następujące Java Bean'y:
+
+\begin{itemize}
+    \item \textsl{UserDetailsService} (rys. 7), w którym został ustawiony sposób logowania na email oraz hasło
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{jpg/security/UserDetailsService.jpg}
+        \caption{Serwis odpowiadający za uwierzytelnianie użytkownika}
+    \end{figure}
+
+    \item \textsl{SecurityFilterChain} - zdefiniowane są tutaj m.in. ścieżki, które nie wymagają autoryzacji dostępu, zarządzanie sesją ustawione na bezstanowe czy ustawienia serwera oauth2 (rys. 8)
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{jpg/security/SecurityFilterChain.jpg}
+        \caption{Bean SecurityFilterChain}
+    \end{figure}
+
+    \newpage
+    \item \textsl{CorsConfigurationSource} - konfiguracja CORS, która specyfikuje dozwolone w aplikacji pochodzenie, listę metod oraz nagłówków żądań HTTP (rys. 9).
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{jpg/security/CorsConfigurationSource.jpg}
+        \caption{Bean CorsConfigurationSource}
+    \end{figure}
+
+    \item \textsl{JwtDecoder}, \textsl{JwtEncoder} oraz \textsl{PasswordEncoder} - definicja algorytmów enkodujących i dekodujących token JWT oraz enkodera do haseł, dzięki czemu będą one przechowywane w bazie w postaci zakodowanej (rys. 10).
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{jpg/security/JWTendocers.jpg}
+        \caption{Beany enkoderów i dekoderów używanych w aplikacji}
+    \end{figure}
+\end{itemize}
+
+\subsubsection{Klasa \textsl{EmailService}}
+
+Jest to klasa, w której umieszczono implementację funkcjonalności związanej z powiadomieniami email (rys. 9). Zawiera ona interfejs \textcolor{keywordColour}{\textsl{@JavaMailSender}} wraz z adnotacją \textcolor{keywordColour}{\textsl{@Autowired}\footnote{\textsl{@Autowired} - adnotacja wprowadzona w standardzie Spring 2.5, służąca do wstrzykiwania zależności w oparciu o adnotacje. Pozwala Spring'owi na znajdowanie i wstrzykiwanie Beanów do innych Beanów \cite{autowire}}}, kilka zmiennych statycznych używanych przy formatowaniu maila oraz metodę \textsl{sendRegisterConfirmationEmail}, użytą później w kontrolerze \textsl{UserController} jako potwierdzenie pomyślnej rejestracji.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{jpg/email/EmailService.jpg}
+    \caption{Implementacja klasy \textsl{EmailService} }
+\end{figure}
+
+\subsubsection{Klasa \textsl{UserController}}
+Klasa, w której zdefiniowane są wszystkie endpointy, któych scieżka rozpoczyna się od \textsl{/api/users/}, udostępniająca wiele metod oraz funkcjonalności takich jak:
+
+\begin{itemize}
+    \item \textsl{/register} - rejestracja użytkownika
+    \item \textsl{/{userId}/add-car} - dodanie samochodu do profilu użytkownika
+    \item \textsl{/user} - zwraca dane aktualnie zalogowanego użytkownika
+    \item \textsl{/email} - wykorzystywany przy rejestracji, sprawdza czy dany adres email jest dostępny
+    \item \textsl{/{userId}/cars} - zwraca listę samochodów posiadanych przez danego użytkownika
+    \item \textsl{/{userId}/delete-car/{carId}} - usuwa dany samochód podanego użytkownika
+    \item \textsl{/{userId}/reservations} - zwraca listę rezerwacji użytkownika 
+\end{itemize}
+
+\noindent
+Jednym z najczęściej wykorzystywanych w aplikacji motywów dostępu do danych jest wykonanie odpowiedniego zapytania SQL do bazy danych w repozytorium, zmapowanie ich do postaci DTO w serwisie oraz zwrócenie ich przez kontroler. Proces ten można zobaczyć na rysunkach \textsl{12 - 18}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/reservation/sqlserviceget.jpg}
+    \caption{Implementacja metody \textsl{getReservations} w repozytorium}
+\end{figure}
+
+\noindent
+Metoda \textsl{getReservations} na rysunku \textsl{12} otwiera połączenie do bazy danych, następnie wykonuje przygotowane wcześniej zapytanie (Rys. 13) oraz mapuje zwracane wiersze w odpowiedni sposób (Rys. 14).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/reservation/preparedstatement.jpg}
+    \caption{Metoda zwracająca zapytanie SQL z wypełnionymi nieznanymi parametrami}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/reservation/extractrs.jpg}
+    \caption{Metoda mapująca dane pobranego z bazy danych wiersza na DAO}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/reservation/serviceget.jpg}
+    \caption{Implementacja metody \textsl{getUserReservations} w serwisie}
+\end{figure}
+
+\noindent
+Metoda na rys. \textsl{15} po otrzymaniu listy obiektów z repozytorium konwertuje je na DTO (Rys. 16), a następnie zwraca opakowane w dodatkowy obiekt JSON z jednym polem \textsl{content} (Rys. 17).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/reservation/dtomapper.jpg}
+    \caption{Funkcja mapująca obiekty \textsl{ReservationSqlRow} (DAO) na \textsl{ReservationDto}}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/contentdto.jpg}
+    \caption{Rekord \textsl{ContentDto}, przyjmujący listę obiektów danego typu oraz zwracający tylko te pola, których wartość jest inna niż \textsl{null}}
+\end{figure}
+
+\noindent
+Ostatecznie obiekt \textsl{ContentDto} przekazywany jest do kontrolera, gdzie zostaje zwrócony do klienta (Rys. \textsl{18}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/reservation/controllerget.jpg}
+    \caption{Metoda \textsl{getReservations} zdefiniowana w kontrolerze, zwracająca listę rezerwacji opakowaną w obiekt o nazwie \textsl{content}}
+\end{figure}
+
+\subsubsection{Generowanie tokenu JWT}
+Dostęp do niektórych endpointów w aplikacji wymaga autoryzacji, którą można uzyskać poprzez dołączenie w nagłówku tokenu, który został zwrócony klientowi po pomyślnym logowaniu. Na rysunkach \textsl{19} i \textsl{20} przedstawione jest odpowiednio uwierzytelnianie wraz ze zwróceniem tokenu oraz proces jego generowania w serwisie \textsl{TokenService}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/auth/AuthController.jpg}
+    \caption{Kontroler z metodą odbierającą żądanie \textsl{/api/token} i uwierzytelniającą użytkownika}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/auth/TokenService.jpg}
+    \caption{Serwis \textsl{TokenService} oraz metoda \textsl{generateToken} generująca token JWT}
+\end{figure}
+
+\subsubsection{Przygotowanie listy wolnych terminów do rezerwacji}
+
+
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{java}
+Java - \url{https://docs.oracle.com/javase/specs/jls/se21/html/jls-1.html} (Ostatni dostęp 30.11.2023r.)
+
+\bibitem{maven}
+Maven - \url{https://maven.apache.org/what-is-maven.html} (Ostatni dostęp 15.12.2023r.)
+
+\bibitem{spring}
+Spring Framework - \url{} (Ostatni dostęp 30.11.2023r.)
+
+\bibitem{ioc}
+Inversion of Control - \url{https://martinfowler.com/articles/injection.html#InversionOfControl} (Ostatni dostęp 14.12.2023r.)
+
+\bibitem{dependency-injection}
+Dependency Injection - \url{https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html#page-title} (Ostatni dostęp 14.12.2023r.)
+
+\bibitem{ioc-container}
+IoC Container - \url{https://docs.spring.io/spring-framework/reference/core/beans/introduction.html} (Ostatni dostęp 14.12.2023r.)
+
+\bibitem{spring-boot}
+Spring Boot - \url{https://spring.io/projects/spring-boot} (Ostatni dostęp 14.12.2023r.)
+
+\bibitem{spring-web}
+Spring Web - \url{https://docs.spring.io/spring-boot/docs/current/reference/html/web.html} (Ostatni dostęp 14.12.2023r.)
+
+\bibitem{endpoint}
+Endpoint - \url{https://smartbear.com/learn/performance-monitoring/api-endpoints/} (Ostatni dostęp 14.12.2023r.)
+
+\bibitem{oauth2}
+OAuth 2 Resource Server - \url{https://smartbear.com/learn/performance-monitoring/api-endpoints/} (Ostatni dostęp 15.12.2023r.)
+
+\bibitem{jwt}
+JWT - \url{https://jwt.io/introduction} (Ostatni dostęp 95.12.2023r.)
+
+\bibitem{spring-devtools}
+Spring Devtools - \url{https://docs.spring.io/spring-boot/docs/1.5.16.RELEASE/reference/html/using-boot-devtools.html} (Ostatni dostęp 15.12.2023r.)
+
+\bibitem{postgresql}
+PostgreSQL - \url{https://www.postgresql.org/about/} (Ostatni dostęp 17.12.2023r.)
+
+\bibitem{sql}
+SQL - \url{https://www.w3schools.com/sql/} (Ostatni dostęp 17.12.2023r.)
+
+\bibitem{postgres-driver}
+PostgreSQL Driver - \url{https://docs.spring.io/spring-framework/reference/data-access/jdbc/simple.html} (Ostatni dostęp 15.12.2023r.)
+
+\bibitem{spring-boot-jdbc}
+Spring Boot JDBC - \url{https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc/3.2.0} (Ostatni dostęp 15.12.2023r.)
+
+\bibitem{spring-boot-mail}
+Spring Boot Mail Sender - \url{https://www.baeldung.com/spring-email} (Ostatni dostęp 15.12.2023r.)
+
+\bibitem{spring-boot-maven}
+Spring Boot Maven Plugin - \url{https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/} (Ostatni dostęp 15.12.2023r.)
+
+\bibitem{html}
+HTML - \url{https://html.spec.whatwg.org/#introduction} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{css}
+CSS - \url{https://developer.mozilla.org/en-US/docs/Web/CSS} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{tailwindcss}
+Tailwind CSS - \url{https://tailwindcss.com/} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{utility-first}
+Utility-first - \url{https://tw-elements.com/learn/te-foundations/tailwind-css/utility-first/} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{prettier-plugin-tailwindcss}
+Prettier Plugin Tailwind CSS - \url{https://tailwindcss.com/blog/automatic-class-sorting-with-prettier} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{javascript}
+JavaScript - \url{https://developer.mozilla.org/en-US/docs/Web/JavaScript} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{first-class}
+first-class - \url{https://developer.mozilla.org/en-US/docs/Glossary/First-class_Function} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{tc39}
+TC39 - \url{https://tc39.es/} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{es2023}
+ES2023 - \url{https://tc39.es/ecma262/2023/} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{vuejs}
+Vue.js - \url{https://vuejs.org/guide/introduction} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{dry-principle}
+DRY - \url{https://wiki.c2.com/?DontRepeatYourself} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{vue-sfc}
+SFC - \url{https://vuejs.org/guide/introduction#single-file-components} (Ostatni dostęp 16.12.2023r.)
+
+\bibitem{three}
+Three.js - \url{https://developer.mozilla.org/en-US/docs/Glossary/Three_js} (Ostatni dostęp 17.12.2023r.)
+
+\bibitem{springdoc}
+SpringDoc OpenAPI Starter WebMVC UI - \url{https://developer.mozilla.org/en-US/docs/Glossary/Three_js} (Ostatni dostęp 20.12.2023r.)
+
+\bibitem{api}
+API - \url{https://aws.amazon.com/what-is/api/} (Ostatni dostęp 17.12.2023r.)
+
+\bibitem{dto}
+DTO - \url{https://stackoverflow.com/questions/1051182/what-is-a-data-transfer-object-dto/} (Ostatni dostęp 19.12.2023r.)
+
+\bibitem{cors}
+CORS - \url{https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/} (Ostatni dostęp 17.12.2023r.)
+
+\bibitem{dao}
+DAO - \url{https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/} (Ostatni dostęp 17.12.2023r.)
+
+\bibitem{repository-pattern}
+Repository Pattern - \url{https://medium.com/@pererikbergman/repository-design-pattern-e28c0f3e4a30} (Ostatni dostęp 19.12.2023r.)
+
+\bibitem{java-record-keyword}
+Java Record Keyword - \url{https://www.baeldung.com/java-record-keyword/} (Ostatni dostęp 19.12.2023r.)
+
+\bibitem{npm}
+npm - \url{https://www.w3schools.com/whatis/whatis_npm.asp/} (Ostatni dostęp 19.12.2023r.)
+
+\bibitem{pinia}
+Pinia - \url{https://www.w3schools.com/whatis/whatis_npm.asp/} (Ostatni dostęp 19.12.2023r.)
+
+\bibitem{autowire}
+Autowire - \url{https://www.baeldung.com/spring-autowire/} (Ostatni dostęp 20.12.2023r.)
+
+
+
+\end{thebibliography}
+
+
+%% ########################################################
+\end{document}
