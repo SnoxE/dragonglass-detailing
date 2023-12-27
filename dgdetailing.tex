@@ -499,6 +499,205 @@ Dostęp do niektórych endpointów w aplikacji wymaga autoryzacji, którą możn
 \end{figure}
 
 \subsubsection{Przygotowanie listy wolnych terminów do rezerwacji}
+Przygotowanie listy wolnych terminów do rezerwacji jest najbardziej złożonym procesem w całej aplikacji, ponieważ na czas trwania oraz cenę danej usługi składają się typ usługi oraz rozmiar auta. Algorytm zwracający listę dostępnych terminów został z myślą o efektywności oraz minimalizowaniu niepotrzebnych przerw. Pierwszym etapem jest przygotowanie listy wolnych \,\,slotów\'\', w godzinach od 9 do 19 oraz z inkrementem 30 minut (\textsl{Rys. 21}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/slots/generateSlots.jpg}
+    \caption{Metoda zwracająca mapę z wszystkimi możliwymi datami oraz listą czasów rezerwacji, dla każdego z nich}
+\end{figure}
+
+\noindent
+Metoda \textsl{generateTimeSlotsForRange} przyjmuje 2 argumenty:
+\begin{itemize}
+    \item \textsl{startDate} - argument typu \textsl{LocalDate}, która określa dzień, od którego ma nastąpić generowanie dat
+    \item \textsl{days} - argument będący liczbą całkowitą, określający na ile dni \,\,do przodu'' mają zostać wygenerowane daty 
+\end{itemize}
+
+\noindent
+W pętli, dla każdego dnia w zakresie, generowana jest lista wolnych \,\,slotów'' z w postaci godzin, z każdym kolejnym 30 minut później niż poprzedni. Następnie pobierana jest lista wszystkich rezerwacji, na wybrany okres, z bazy danych, a ostatecznie zwracana (\textsl{Rys. 22}) jest lista terminów, przefiltrowanych zgodnie z tymi już zajętymi, w taki sposób, aby wybrany, termin mieścił się w godzinach pracy studia.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/slots/getAvailableSlots.jpg}
+    \caption{Metoda zwracająca mapę jedynie z dostępnymi datami oraz listą dostępnych czasów rezerwacji, dla każdego z nich}
+\end{figure}
+
+\noindent
+Metoda \textsl{filterSlots} (\textsl{Rys. 23}), jak sama nazwa wskazuje, ma za zadanie odfiltrować wszystkie godziny rezerwacji, w zależności od długości jej trwania, w taki sposób, aby nie doszło do nałożenia się na siebie dwóch lub więcej rezerwacji, a także aby wykluczyć sytuację, w której usługa została by zakończona po godzinie zamknięcia studia.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/slots/filterSlots.jpg}
+    \caption{Metoda filtrująca mapę dat i czasów}
+\end{figure}
+
+\subsection{Frontend}
+
+\subsubsection{Wykorzystane komponenty}
+W Vue.js promowane jest tworzenie, w miarę możliwości, jak najbardziej generycznych komponentów, któe będzie poźniej można wielokrotnie ponownie wykorzystać. Zmniejsza to ilość powtarzającego się kodu i jest zgodne z zasadą DRY (Don't Repeat Yourself). Lista wykorzystanych do zbudowania aplikacji komponentów prezentuje się następująco:
+
+\begin{itemize}
+    \item \textsl{AboutSection} - sekcja na stronie głónej z informacjami o studiu
+    \item \textsl{AddCarForm} - formularz dodawania samochodu do profilu, dostępny dopiero po zalogowaniu
+    \item \textsl{CalendarPage} - strona z kalendarzem rezerwacji na następny tydzień dostępna tylko dla pracownika
+    \item \textsl{CarPage} - strona z wszystkimi samochodami użytkownika
+    \item \textsl{HeroSection} - sekcja tytułowa na stronie głównej
+    \item \textsl{InputField} - generyczny komponent, który może służyć jako dowolne pole tekstowe, wykorzystywany we wszystkich formularzach
+    \item \textsl{LoginForm} - formularz logowania użytkownika
+    \item \textsl{MenuSection} - strona przedstawiająca wszystkie usługi oferowane przez studio
+    \item \textsl{NavBar} - pasek nawigacji, zmienia się w zależności od stanu zalogowania oraz uprawnień użytkownika
+    \item \textsl{NavBarItem} - generyczny komponent używany do renderowania przycisków na pasku nawigacyjnym
+    \item \textsl{OrdersPage} - strona ze wszystkimi rezerwacjami użytkownika, dostępna po zalogowaniu
+    \item \textsl{ProfilePage} - strona przedstawiająca profil użytkownika wraz z informacjami o nim, dostępna po zalogowaniu
+    \item \textsl{RegisterForm} - formularz rejestracyjny
+    \item \textsl{ReserveForm} - formularz zgłaszania rezerwacji, dostępny dopiero po zalogowaniu
+    \item \textsl{ThreeJsAnimation} - komponent na wykorzystany na stronie głównej, zawierający animację Three.js
+\end{itemize}
+
+\subsection{Axios}
+\textsl{\textbf{Axios}} \cite{axios} jest klientem HTTP opartym na obietnicach (ang. \textsl{promise-based}). Pozwala on na asynchroniczną komunikację z backendem, dzięki czemu to programista może decydować w jakiej kolejności mają się wykonywać wydarzenia. Na rysunku 24, przedstawiona została konfiguracja, która specyfikuje podstawową ścieżkę zapytań oraz do każdego, w ramach autoryzacji, dołącza, przechowywany w pamięci lokalnej przeglądarki (ang. \textsl{localStorage}), token JWT.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/front/axios.jpg}
+    \caption{Konfiguracja biblioteki \textsl{axios}}
+\end{figure}
+
+\noindent
+Korzystanie z biblioteki axios znacząco upraszcza tworzenie żądań, ponieważ przygotowane zostały aliasy dla wszystkich wspieranych metod HTTP (wywołanie \textsl{axios.get(...)} na rysunku 25). Biblioteka ta zapewnia również automatyczną serializację do formatu JSON oraz obsługę obiektów JSON otrzymanych w odpowiedzi.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/front/axios usage.jpg}
+    \caption{Przykładowe zapytanie z wykorzystaniem biblioteki axios}
+\end{figure}
+
+\subsection{Vue Router}
+
+\textsl{\textbf{Vue Router}} \cite{vue-router} pozwala na tworzenie aplikacji typu Single-page Application\footnote{SPA - (ang. \textsl{Single-page Application} \cite{spa} - aplikacja internetowa, która posiada tylko jeden dokument \textsl{.html} a w przypadku zajścia zmian, jego ciało jest dynamicznie aktualizowane)}, w naturalny sposób, dzięki wykorzystaniu przygotowanych komponentów. Po dodaniu routera, jedyne co trzeba zrobić, to zmapować komponenty do wybranych ścieżek HTTP. Dzięki temu, Vue Router będzie wiedział co musi wyrenderować. Na rysunku 26 pokazana została wykorzystana konfiguracja Vue Routera, z uwzględnieniem tylko początkowych ścieżek. Strukturę tego pliku można podzielić na następujące części:
+
+\begin{itemize}
+    \item import metod \textsl{createRouter} oraz \textsl{createWebHashHistory} z pakietu \textsl{vue-router}
+    \item import komponentów zawierających widoki oraz magazyn ze stanem uwierzytelnienia
+    \item tablice z deklaracjami wszystkich ścieżek, ich nazwami oraz odpowiadającymi komponentami
+    \item inicjalizacja routera w trybie \textsl{WebHashHistory} pozwalającym na cofanie do poprzednich stron
+    \item konfiguracja wymogu uwierzytelnienia, aby uzyskać dostęp do stron poza ścieżkami określonymi jako \textsl{publicPages}
+    \item eksport routera
+\end{itemize}
+
+\newpage
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{jpg/front/router.jpg}
+    \caption{Przykład konfiguracji Vue Routera}
+\end{figure}
+
+\newpage
+\section{Opis działania}
+
+\subsection{Strona startowa}
+
+Strona startowa aplikacji (Rys. 27) jest taka sama dla wszystkich użytkowników i zawiera 2 przyciski, pierwszy z nich przekierowuje do strony z ofertą studia a drugi przenosi Użytkownika do formularza rezerwacji. Poniżej (Rys. 28) znajduje się animacja w tematyce motoryzacyjne, najważniejsze informacje o studiu w sekcji \,,O NAS'' oraz możliwości kontaktu w sekcji \,,KONTAKT'' (Rys. 29). 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{jpg/manual/homepage.jpg}
+    \caption{Strona startowa aplikacji}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{jpg/manual/aboutsection.jpg}
+    \caption{Animacja oraz sekcja \,,O NAS''}
+\end{figure}
+
+\noindent
+Jedyna różnica na stronie głównej jak  może wystąpić, to inny pasek nawigacji w zależności od stanu zalogowania użytkownika (niezalogowany - rys. 27, zalogowany - rys. 28).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/manual/contactsection.jpg}
+    \caption{Sekcja kontaktowa}
+\end{figure}
+
+\noindent
+Po zalogowaniu oraz najechaniu kursorem na ikonkę \,,USER'', rozwijane jest menu z dodatkowymi opcjami (Rys. 30)
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{jpg/manual/userdropdown.jpg}
+    \caption{Rozwijalne menu dostępne po zalogowaniu}
+\end{figure}
+
+\subsection{Strona z ofertą}
+
+Na stronie tej wylistowane są wszystkie usługi oferowane przez studio DragonGlass Detailing. Po kliknięciu w dany kafelek Użytkownik zostaje przekierowany na podstronę z krókim opisem odpowiedniej usługi oraz wykazem cen i czasu trwania, uzależnionych od wielkości samochodu.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/manual/menusection.jpg}
+    \caption{Strona zawierająca wszystkie usługi oferowane przez studio}
+\end{figure}
+
+\subsection{Logowanie oraz rejestracja}
+
+Użytkownik, który posiada już założone konto, może się zalogować poprzez formularz logowania (Rys. 32) dostępny z paska nawigacyjnego pod przyciskiem \,,Zaloguj'' lub poprzez przejście na stronę \,,Rezerwuj'', ponieważ jest ona dostępna tylko dla zalogowanych użytkowników. Logowanie odbywa się podanym podczas rejestracji adresem email oraz hasłem.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/manual/loginpage.jpg}
+    \caption{Formularz logowania}
+\end{figure}
+
+\noindent
+W przypadku, gdy Użytkownik nie posiada jeszcze konta może przejść do formularza rejestracji (Rys. 33) klikając odpowiedni przycisk na pasku nawigacji lub poprzez odnośnik dostępny poniżej formularza logowania. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{jpg/manual/registerpage.jpg}
+    \caption{Formularz rejestracji}
+\end{figure}
+
+\noindent
+Formularz zapewnia podstawową walidację numeru telefonu oraz adresu email. Po poprawnej rejestracji wyświetlony zostaje komunikat o sukcesie rejestracji. 
+
+\subsection{Profil użytkownika}
+
+\noindent
+Dostępny z rozwijalnego panelu, dopiero po zalogowaniu. Są tutaj widoczne dane użytkownika podane w czasie rejestracji (Rys. 34).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{jpg/manual/profilepage.jpg}
+    \caption{Profil użytkownika}
+\end{figure}
+
+\subsection{Lista samochodów użytkownika}
+
+\noindent
+W zakładce \,,SAMOCHODY'' (Rys. 35) jest dostępna lista samochodów, które dodał użytkownik wraz z informacjami o nich. Dodatkowo każdy z samochodów można usunąć z listy za pomocą dedykowanego przycisku \,,Usuń''. Aby dodać samochód, należy przejść do odpowiedniego formularza za pomocą przycisku \,,Dodaj samochód''.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/manual/carspage.jpg}
+    \caption{Lista wszystkich samochodów użytkownika}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{jpg/manual/addcar.jpg}
+    \caption{Lista wszystkich samochodów użytkownika}
+\end{figure}
+
+\noindent
+Formularz dodawania samochodu (Rys. 36) wymaga podania podstawowych informacji o samochodzie, pozwalających na jego zidentyfikowanie oraz najważniejszy parametr jakim jest wielkość samochodu.
+
+\subsection{Dokonane rezerwacje}
+
+
+
+
 
 
 \newpage
@@ -626,6 +825,12 @@ Pinia - \url{https://www.w3schools.com/whatis/whatis_npm.asp/} (Ostatni dostęp 
 
 \bibitem{autowire}
 Autowire - \url{https://www.baeldung.com/spring-autowire/} (Ostatni dostęp 20.12.2023r.)
+
+\bibitem{axios}
+Axios - \url{https://axios-http.com/docs/intro/} (Ostatni dostęp 24.12.2023r.)
+
+\bibitem{vue-router}
+Vue Router - \url{https://router.vuejs.org/guide//} (Ostatni dostęp 26.12.2023r.)
 
 
 
