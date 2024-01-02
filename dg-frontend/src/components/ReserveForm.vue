@@ -132,6 +132,9 @@ export default {
       })
 
       this.availableSlots = response.data[this.getDateFromPicker()]
+      if (this.availableSlots.length == 0) {
+        this.availableSlots.push('Brak wolnych terminów')
+      }
     },
     getDateFromPicker() {
       if (this.selectedDate != '') {

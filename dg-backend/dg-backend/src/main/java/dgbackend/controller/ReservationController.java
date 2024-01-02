@@ -1,7 +1,10 @@
 package dgbackend.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dgbackend.common.ResponseDto;
+import dgbackend.common.dto.ContentDto;
 import dgbackend.database.reservations.dto.AddReservationDto;
+import dgbackend.database.reservations.dto.ReservationDto;
 import dgbackend.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,5 +54,12 @@ public class ReservationController {
             @PathVariable("reservationId") String reservationId) {
         reservationService.deleteReservation(Integer.parseInt(userId), Integer.parseInt(reservationId));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/calendar")
+    public ContentDto<ReservationDto> getCalendarReservations(
+            @RequestParam(value = "after", required = false) String after,
+            @RequestParam(value = "before", required = false) String before) {
+        return reservationService.getCalendarReservations(after, before);
     }
 }

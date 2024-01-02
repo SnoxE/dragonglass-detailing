@@ -48,7 +48,11 @@
               <router-link to="/user/profil">Profil</router-link>
               <router-link to="/user/samochody">Samochody</router-link>
               <router-link to="/user/rezerwacje">Rezerwacje</router-link>
-              <!-- <router-link to="/user/kalendarz">Kalendarz</router-link> -->
+              <router-link
+                v-if="userRole === 'ADMIN' || userRole === 'EMPLOYEE'"
+                to="/user/kalendarz"
+                >Kalendarz</router-link
+              >
               <router-link to="" @click="logout()">Wyloguj</router-link>
             </div>
           </li>
@@ -113,8 +117,12 @@ export default {
           ]
         }
       ],
-      showUserMenu: false
+      showUserMenu: false,
+      userRole: null
     }
+  },
+  created() {
+    this.userRole = JSON.parse(localStorage.getItem('role'))
   },
   methods: {
     toggleMenu() {

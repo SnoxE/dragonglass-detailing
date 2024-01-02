@@ -1,111 +1,90 @@
-<!-- <template>
-  <div class="calendar">
-    <div class="calendar-row calendar-header">
-      <div v-for="day in days" :key="day" class="calendar-cell">{{ day }}</div>
-    </div>
-
-    <div v-for="time in times" :key="time" class="calendar-row">
-      <div v-for="day in days" :key="day + time" class="calendar-cell"></div>
-    </div>
-  </div>
-</template> -->
-
 <template>
-  <div class="calendar">
-    <!-- Days Header -->
-    <div class="calendar-row calendar-header">
-      <div v-for="day in days" :key="day" class="calendar-cell">{{ day }}</div>
-    </div>
+  <div class="min-h-screen bg-dark-mode-gray">
+    <div class="mx-auto flex max-w-screen-xl flex-col flex-wrap gap-6 p-4">
+      <h1 class="border-b-2 pb-2 text-4xl font-medium text-white">REZERWACJE</h1>
 
-    <!-- Time Slots -->
-    <div v-for="(time, timeIndex) in times" :key="time" class="calendar-row">
-      <div v-for="(day, dayIndex) in days" :key="day + time" class="calendar-cell">
-        <div
-          v-for="reservation in filterReservations(dayIndex, timeIndex)"
-          :key="reservation"
-          :style="{ height: reservation.height + 'px' }"
-          class="reservation"
-        >
-          {{ reservation.title }}
+      <div
+        v-for="order in orderList"
+        :key="order.res_id"
+        class="flex max-w-screen-md rounded-lg border-2 border-transparent text-white hover:border-white"
+      >
+        <div class="bg w-1/4 rounded-l-lg bg-light-gray py-6 pl-6">
+          <div class="flex flex-col">
+            <span> {{ extractDateAndTime(order.res_start_at)['date'] }}</span>
+            <span>
+              {{ extractDateAndTime(order.res_start_at)['time'] }} -
+              {{ extractDateAndTime(order.res_end_at)['time'] }}</span
+            >
+            <span class="text-xkom-gray"> nr {{ order.res_id }}</span>
+            <span class="mt-2">{{ order.services_price }} zł</span>
+          </div>
+        </div>
+        <div class="flex w-3/4 justify-between rounded-r-lg bg-dark-gray">
+          <div class="my-auto flex flex-col px-10">
+            <span class="justify-end text-xl font-medium"> {{ order.services_name }}</span>
+            <span class="text-lg">
+              {{ order.cars_year }} {{ order.cars_make }} {{ order.cars_model }}</span
+            >
+            <span> {{ order.cars_colour }}</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
+<script>
+import axios from 'axios'
 
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-const times = [
-  '09:00',
-  '10:00',
-  '11:00',
-  '12:00',
-  '13:00',
-  '14:00',
-  '15:00',
-  '16:00',
-  '17:00',
-  '18:00',
-  '19:00'
-]
+export default {
+  name: 'CalendarPage',
+  data() {
+    return {
+      items: [
+        { id: 1, label: 'Option 1', value: 'option1' },
+        { id: 2, label: 'Option 2', value: 'option2' },
+        { id: 3, label: 'Option 3', value: 'option3' }
+      ],
+      orderList: [],
+      selectedItems: [],
+      userId: ''
+    }
+  },
+  async mounted() {
+    await this.fetchUserId()
+    await this.fetchOrders()
+  },
+  methods: {
+    async fetchOrders() {
+      const response = await axios.get('api/reservations/calendar')
+      const reservationList = response.data['content']
 
-// This would be fetched or derived from your reservations data
-const reservations = ref([
-  // Example reservation
-  { day: 'Monday', startTime: '09:00', endTime: '11:00', title: 'Meeting' }
-  // Add more reservations as needed
-])
-const timeSlotHeight = 20
-const filterReservations = (dayIndex, timeIndex) => {
-  return reservations.value
-    .filter((reservation) => {
-      const startIdx = times.indexOf(reservation.startTime)
-      const endIdx = times.indexOf(reservation.endTime)
-      return reservation.dayIndex === dayIndex && startIdx <= timeIndex && timeIndex < endIdx
-    })
-    .map((reservation) => {
-      const span = times.indexOf(reservation.endTime) - times.indexOf(reservation.startTime)
-      const height = span * timeSlotHeight
-      return {
-        ...reservation,
-        height
-      }
-    })
+      reservationList.forEach((reservation) => {
+        this.orderList.push(reservation)
+      })
+    },
+    async fetchUserId() {
+      const response = await axios.get('api/users/user')
+      this.userId = response.data['id']
+    },
+    async fetchUserCars() {
+      const response = await axios.get('api/users/' + this.userId + '/cars')
+      console.log(response.data['content'])
+    },
+    extractDateAndTime(timestamp) {
+      const dateObj = new Date(timestamp)
+
+      const year = dateObj.getFullYear()
+      const month = ('0' + (dateObj.getMonth() + 1)).slice(-2) // Months are 0-indexed
+      const day = ('0' + dateObj.getDate()).slice(-2)
+      const date = `${year}-${month}-${day}`
+
+      const hours = ('0' + dateObj.getHours()).slice(-2)
+      const minutes = ('0' + dateObj.getMinutes()).slice(-2)
+      const time = `${hours}:${minutes}`
+
+      return { date, time }
+    }
+  }
 }
 </script>
-
-<style>
-.calendar {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-gap: 5px;
-}
-
-.calendar-row {
-  display: contents;
-}
-
-.calendar-cell {
-  border: 1px solid #ddd;
-  padding: 10px;
-  position: relative; /* Needed for absolute positioning of reservations */
-  min-height: 20px; /* Adjust as needed */
-}
-
-.calendar-header {
-  font-weight: bold;
-  background-color: #f3f3f3;
-}
-
-.reservation {
-  position: absolute;
-  width: 100%;
-  background-color: #add8e6;
-  z-index: 10;
-  text-align: center;
-  border-radius: 4px;
-  padding: 2px;
-}
-</style>

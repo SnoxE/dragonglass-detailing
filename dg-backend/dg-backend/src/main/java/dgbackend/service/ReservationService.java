@@ -10,6 +10,7 @@ import dgbackend.database.reservations.sql.ReservationSqlRow;
 import dgbackend.database.reservations.sql.ReservationSqlService;
 import dgbackend.database.reservations.sql.ReservationStartEndTimesSqlRow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,6 +59,27 @@ public class ReservationService {
 
     public ContentDto<ReservationDto> getUserReservations(String userId) {
         List<ReservationDto> reservationDtoList = reservationSqlService.getReservations(userId)
+                .stream().map(ReservationService::reservationDtoMapper).toList();
+
+        return new ContentDto<>(reservationDtoList);
+    }
+
+    public ContentDto<ReservationDto> getCalendarReservations(String after, String before) {
+
+        LocalDate afterDate;
+        LocalDate beforeDate;
+
+        if(after == null)
+            afterDate = LocalDate.now();
+        else
+            afterDate = LocalDate.parse(after);
+
+        if(after == null)
+            beforeDate = LocalDate.now().plusWeeks(1);
+        else
+            beforeDate = LocalDate.parse(before);
+
+        List<ReservationDto> reservationDtoList = reservationSqlService.getCalendarReservations(afterDate, beforeDate)
                 .stream().map(ReservationService::reservationDtoMapper).toList();
 
         return new ContentDto<>(reservationDtoList);

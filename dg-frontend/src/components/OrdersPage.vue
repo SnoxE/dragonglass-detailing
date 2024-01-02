@@ -2,29 +2,6 @@
   <div class="min-h-screen bg-dark-mode-gray">
     <div class="mx-auto flex max-w-screen-xl flex-col flex-wrap gap-6 p-4">
       <h1 class="border-b-2 pb-2 text-4xl font-medium text-white">REZERWACJE</h1>
-
-      <!-- <div class="flex flex-col gap-3 text-lg text-white">
-        <span>FILTRUJ</span>
-        <div> -->
-          <!-- <label for=""></label>
-            
-          <input type="selector" name="" id="" class="bg-light-gray" /> -->
-          <!-- <div class="selector">
-            <form>
-              <div v-for="item in items" :key="item.id" class="checkbox">
-                <input
-                  :id="`checkbox-${item.id}`"
-                  v-model="selectedItems"
-                  type="checkbox"
-                  :value="item.value"
-                />
-                <label :for="`checkbox-${item.id}`">{{ item.label }}</label>
-              </div>
-            </form>
-            <div>Selected Items: {{ selectedItems }}</div>
-          </div>
-        </div>
-      </div> -->
       <div
         v-for="order in orderList"
         :key="order.res_id"

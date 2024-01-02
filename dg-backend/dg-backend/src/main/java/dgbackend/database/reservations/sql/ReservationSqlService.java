@@ -9,10 +9,8 @@ import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.List;
 
 import static dgbackend.common.resource.ResourceManager.readSqlQuery;
@@ -21,11 +19,13 @@ import static dgbackend.common.resource.ResourceManager.readSqlQuery;
 public class ReservationSqlService {
 
     private static final Logger log = LoggerFactory.getLogger(ReservationSqlService.class);
-    public static final String SELECT_RESERVATIONS_BY_USER_ID =
+    private static final String SELECT_RESERVATIONS_BY_USER_ID =
             readSqlQuery("sql/select/reservations/select_reservations_by_user_id.sql");
-    public static final String SELECT_RESERVATIONS =
+    private static final String SELECT_RESERVATIONS =
             readSqlQuery("sql/select/reservations/select_reservations.sql");
-    public static final String DELETE_RESERVATION_BY_ID_AND_USER_ID =
+    private static final String SELECT_CALENDAR_RESERVATIONS =
+            readSqlQuery("sql/select/reservations/select_calendar_reservations.sql");
+    private static final String DELETE_RESERVATION_BY_ID_AND_USER_ID =
             readSqlQuery("sql/delete/delete_reservation_by_id_and_user_id.sql");
 
     JdbcOperations jdbcOperations;
@@ -44,6 +44,22 @@ public class ReservationSqlService {
                         log.error(
                                 "Unable to retrieve cars due to unexpected exception (userId={}, message={})",
                                 userId,
+                                e.getMessage(),
+                                e);
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
+    public List<ReservationSqlRow> getCalendarReservations(LocalDate after, LocalDate before) {
+        return jdbcOperations.query(
+                con -> preparedCalendarReservationsStatement(con, after, before),
+                (rs, rowNum) -> {
+                    try {
+                        return extractReservationRow(rs);
+                    } catch (JsonProcessingException e) {
+                        log.error(
+                                "Unable to retrieve cars due to unexpected exception (message={})",
                                 e.getMessage(),
                                 e);
                         throw new RuntimeException(e);
@@ -86,6 +102,19 @@ public class ReservationSqlService {
 
         int parameterIndex = 0;
         statement.setInt(++parameterIndex, Integer.parseInt(userId));
+
+        return statement;
+    }
+
+    private PreparedStatement preparedCalendarReservationsStatement(
+            Connection connection,
+            LocalDate after,
+            LocalDate before) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(SELECT_CALENDAR_RESERVATIONS);
+
+        int parameterIndex = 0;
+        statement.setObject(++parameterIndex, after);
+        statement.setObject(++parameterIndex, before);
 
         return statement;
     }

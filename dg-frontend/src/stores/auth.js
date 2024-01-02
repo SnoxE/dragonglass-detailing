@@ -9,6 +9,7 @@ export const useAuthStore = defineStore({
     return {
       user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
       token: localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : '',
+      role: localStorage.getItem('role') ? JSON.parse(localStorage.getItem('role')) : null,
       returnUrl: '/'
     }
   },
@@ -26,14 +27,26 @@ export const useAuthStore = defineStore({
         this.user = email
         this.token = token
         isLoggedIn.value = true
+        await this.fetchUser()
         router.push(this.returnUrl || '/')
+      }
+    },
+    async fetchUser() {
+      const response = await axios.get('api/users/user')
+
+      if (response.status == 200) {
+        const role = response.data['role']
+        localStorage.setItem('role', JSON.stringify(role))
+        this.role = role
       }
     },
     logout() {
       this.user = null
       this.token = ''
+      this.role = ''
       localStorage.removeItem('user')
       localStorage.removeItem('token')
+      localStorage.removeItem('role')
     }
   }
 })
