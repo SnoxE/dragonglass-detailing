@@ -40,3 +40,25 @@ rezerwacja
 
 filtorowanie rezerwacji front
 profil front
+
+Celem projektu bylo napisanie aplikacji z wykorzystaniem spirnga vue i prostgresa (do kazdego napisac za co odpowiada)
+ogolne funkcje i dopiero rozwinac je w
+, ktora miala nastepujace funkcjonalnosci:
+
+- zamawianie uslug
+- logowanie i rejestracja przy pomocy czegos
+- powiadomienia przy pomocy java mail sender
+- ogolne zdanie o bezpieczenstwie z nazwa technologii
+
+zakonczenie bardzo podobnie co do wstepu
+
+prezentacja:
+1: cele
+2: technologie
+3: struktura katalogow?
+
+4,5,6: cos o implementacji
+7: testy
+8: pokazanie dzialania
+
+ostatni: co sie udalo
