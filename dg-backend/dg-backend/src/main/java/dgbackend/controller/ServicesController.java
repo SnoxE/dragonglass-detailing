@@ -28,8 +28,8 @@ public class ServicesController {
 
     @GetMapping("/{serviceName}/{carSize}")
     public List<ServiceDto> getServiceId(
-            @PathVariable("serviceName")String serviceName,
-            @PathVariable("carSize")String carSize) {
+            @PathVariable("serviceName") String serviceName,
+            @PathVariable("carSize") String carSize) {
         return servicesService.getServiceByNameAndCarSize(serviceName, carSize);
     }
 }

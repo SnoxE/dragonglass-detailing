@@ -126,7 +126,7 @@ create table services(
   name varchar(50) NOT NULL,
   price integer NOT NULL,
   length TIME NOT NULL,
-  size car_size NOT NULL
+  car_size car_size NOT NULL
 );
 
 -- RESERVATIONS TABLE
