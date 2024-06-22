@@ -17,8 +17,8 @@
       <h1
         class="flex justify-center p-4 text-center text-2xl font-bold text-white md:text-3xl lg:text-6xl"
       >
-        Lorem ipsum dolor sit amet <br />
-        consectetur adipisicing elit.
+        Perfekcja w każdym detalu. <br />
+        Twoje auto, nasza pasja.
       </h1>
       <div class="mt-8 flex w-full justify-center">
         <router-link

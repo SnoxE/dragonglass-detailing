@@ -36,7 +36,7 @@
           </div>
           <div class="my-auto">
             <button
-              class="rounded-md border border-mcl-orange p-2 px-10 text-white"
+              class="rounded-md p-2 px-10 text-white hover:border hover:border-mcl-orange"
               @click="deleteCar(car.id)"
             >
               Usuń
